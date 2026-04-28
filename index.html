@@ -4,6 +4,47 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kostiantyn Keilin — Senior Front-End Engineer</title>
+<meta name="description" content="Senior Front-End Engineer with 15+ years of experience. React, TypeScript, micro-frontends, config-driven architecture. Based in Toronto, Ontario.">
+<link rel="canonical" href="https://koskei.com">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://koskei.com">
+<meta property="og:title" content="Kostiantyn Keilin — Senior Front-End Engineer">
+<meta property="og:description" content="Senior Front-End Engineer with 15+ years of experience. React, TypeScript, micro-frontends, config-driven architecture. Based in Toronto, Ontario.">
+<meta property="og:image" content="https://koskei.com/photo.jpg">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Kostiantyn Keilin — Senior Front-End Engineer">
+<meta name="twitter:description" content="Senior Front-End Engineer with 15+ years of experience. React, TypeScript, micro-frontends, config-driven architecture. Based in Toronto, Ontario.">
+<meta name="twitter:image" content="https://koskei.com/photo.jpg">
+
+<!-- JSON-LD -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Kostiantyn Keilin",
+  "jobTitle": "Senior Front-End Engineer",
+  "url": "https://koskei.com",
+  "email": "keilinkostiantyn@gmail.com",
+  "telephone": "+19059621211",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Toronto",
+    "addressRegion": "Ontario",
+    "addressCountry": "CA"
+  },
+  "sameAs": [
+    "https://github.com/KKeylin",
+    "https://www.linkedin.com/in/kostiantyn-keilin/",
+    "https://medium.com/@kostiantyn.keilin",
+    "https://www.npmjs.com/~kkeylin"
+  ]
+}
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -188,6 +229,18 @@
     margin-bottom: 2.5rem;
   }
   h2 strong { font-weight: 600; }
+
+  /* AVATAR */
+  .avatar {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    display: block;
+    margin-bottom: 1rem;
+    filter: grayscale(20%);
+  }
 
   /* ABOUT */
   .about-grid {
@@ -556,6 +609,7 @@
       <div class="avail-badge">Open to new opportunities</div>
     </div>
     <div class="about-meta">
+      <img src="photo.jpg" alt="Kostiantyn Keilin" class="avatar">
       <div class="meta-row">
         <span class="meta-key">Location</span>
         <span class="meta-val">Toronto, Ontario · Canada</span>
