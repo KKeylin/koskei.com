@@ -4,17 +4,21 @@ Personal landing page for [Kostiantyn Keilin](https://koskei.com) — Senior Fro
 
 ## Stack
 
-Single `index.html` file. No build step, no dependencies, no framework.
+Next.js (App Router) · TypeScript · React 19. No external UI library.
 
 ## Deploy
 
 Hosted on Vercel. Deploys automatically on push to `main`.
 
 1. Push changes to `main`
-2. Vercel picks it up — no build command, output directory is repo root
+2. Vercel picks it up automatically
 
+**Build command:** `next build`  
 **Domain:** koskei.com
 
-## Local preview
+## Local dev
 
-Open `index.html` directly in a browser — no server needed.
+```bash
+npm install
+npm run dev
+```
