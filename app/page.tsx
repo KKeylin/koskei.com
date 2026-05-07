@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import FadeIn from '@/components/FadeIn'
+import Testimonials from '@/components/Testimonials'
 
 function yearsLabel(startYear: number, startMonth: number, startDay: number): string {
   const now = new Date()
@@ -62,12 +63,13 @@ export default function Home() {
   return (
     <>
       <nav>
-        <div className="nav-logo">koskei.com</div>
+        <a href="#hero" className="nav-logo">koskei.com</a>
         <ul className="nav-links">
           <li><a href="#about">About</a></li>
           <li><a href="#projects">Projects</a></li>
           <li><a href="#experience">Experience</a></li>
           <li><a href="#skills">Skills</a></li>
+          <li><a href="#testimonials">Testimonials</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
       </nav>
@@ -154,6 +156,7 @@ export default function Home() {
               <a href="https://config-driven-testimonials-demo.vercel.app/" target="_blank" rel="noopener noreferrer" className="proj-link"><IconExternalLink />Demo</a>
               <a href="https://github.com/KKeylin/config-driven-testimonials" target="_blank" rel="noopener noreferrer" className="proj-link"><IconGitHub />GitHub</a>
               <a href="https://www.npmjs.com/package/config-driven-testimonials" target="_blank" rel="noopener noreferrer" className="proj-link"><IconNpm />NPM</a>
+              <a href="#cdt-note" className="proj-link proj-link-internal">↓ Live on this page</a>
             </div>
           </FadeIn>
 
@@ -275,9 +278,26 @@ export default function Home() {
         </FadeIn>
       </section>
 
+      {/* TESTIMONIALS */}
+      <section id="testimonials">
+        <span id="cdt-note" className="cdt-anchor" aria-hidden="true" />
+        <div className="section-label">05 — Testimonials</div>
+        <h2>What people <strong>say</strong></h2>
+        <FadeIn>
+          <Testimonials />
+        </FadeIn>
+        <div className="cdt-note-panel">
+          <div className="cdt-note-inner">
+            <div className="cdt-note-label">// config-driven-testimonials — live integration</div>
+            <p>The testimonials above are rendered directly from my open-source npm package. A single JSON config drives everything — layout, content, avatars. No backend, no CMS. Drop it into any React app and it just works.</p>
+            <code>npm install config-driven-testimonials</code>
+          </div>
+        </div>
+      </section>
+
       {/* LINKS */}
       <section id="links">
-        <div className="section-label">05 — Links</div>
+        <div className="section-label">06 — Links</div>
         <h2>Find me <strong>online</strong></h2>
         <FadeIn className="links-grid">
           <a href="https://github.com/KKeylin" target="_blank" rel="noopener noreferrer" className="link-card">
@@ -301,7 +321,7 @@ export default function Home() {
 
       {/* CONTACT */}
       <section id="contact">
-        <div className="section-label">06 — Contact</div>
+        <div className="section-label">07 — Contact</div>
         <h2>Let&apos;s <strong>talk</strong></h2>
         <FadeIn className="contact-inner">
           <div className="contact-text">
