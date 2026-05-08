@@ -35,8 +35,8 @@ Senior Software Engineer roles in fintech and enterprise.
 
 ## Project overview
 
-Single-file static landing page (`index.html`). No build step, no framework —
-intentionally minimal to keep the deploy simple (Vercel static or GitHub Pages).
+Next.js (App Router) + TypeScript + React 19. Single-page site — one route (`/`),
+no dynamic data, no auth. Deployed on Vercel with automatic builds from `main`.
 
 **Purpose:** Public-facing personal site. Primary audiences:
 1. Hiring managers / recruiters in fintech and enterprise
@@ -49,13 +49,22 @@ intentionally minimal to keep the deploy simple (Vercel static or GitHub Pages).
 
 ```
 koskei.com/
-├── index.html       ← entire site (HTML + CSS + JS inline)
+├── app/
+│   ├── globals.css      ← all styles (design tokens, layout, sections)
+│   ├── icon.svg         ← favicon (Next.js auto-links via app/ convention)
+│   ├── layout.tsx       ← root layout: fonts, metadata, JSON-LD
+│   └── page.tsx         ← entire page content (all sections)
+├── components/
+│   ├── FadeIn.tsx       ← IntersectionObserver scroll-reveal wrapper
+│   └── Testimonials.tsx ← config-driven-testimonials integration
+├── public/
+│   └── photo.jpg        ← author photo (used in About and OG tags)
+├── testimonials.config.json  ← testimonials data for the widget
+├── next.config.ts
+├── tsconfig.json
 ├── CLAUDE.md        ← you are here
-└── README.md        ← optional, brief deploy instructions
+└── README.md
 ```
-
-No `node_modules`, no `package.json`, no bundler.
-If this ever migrates to Next.js or Astro, update this file.
 
 ---
 
@@ -92,8 +101,9 @@ Do not introduce gradients, glow effects, or neon — keep it flat and sharp.
 | 02 | `#projects` | What I've built |
 | 03 | `#experience` | Companies I've worked with |
 | 04 | `#skills` | What I work with |
-| 05 | `#links` | Find me online |
-| 06 | `#contact` | Let's talk |
+| 05 | `#testimonials` | What people say |
+| 06 | `#links` | Find me online |
+| 07 | `#contact` | Let's talk |
 
 ---
 
@@ -156,36 +166,40 @@ everything in localStorage, 300ms simulated latency.
 
 ## Deployment
 
-Currently: static file, Vercel (or GitHub Pages).
+Vercel, auto-deploys from `main`.
 Domain: koskei.com
 
-To deploy manually:
-1. Push `index.html` to the repo
-2. Vercel auto-deploys from `main` branch
+Build settings (Vercel default for Next.js):
+- Build command: `next build`
+- Output directory: `.next`
+- Node version: 20+
 
-No build command needed — output directory is the repo root.
+To deploy: push to `main` — Vercel picks it up automatically.
 
 ---
 
 ## Planned iterations
 
-### v1 (current)
+### v1 (done)
 - [x] Single-file HTML landing
-- [x] All 6 sections
 - [x] Dark tech-style design
 - [x] Mobile-responsive
 - [x] Fade-in scroll animations
 
-### v2 (next)
-- [ ] Add real photo / avatar
+### v2 (done)
+- [x] Migrate to Next.js App Router + TypeScript
+- [x] Real photo in About section
+- [x] Open Graph + Twitter Card meta tags
+- [x] JSON-LD structured data (Person schema)
+- [x] Testimonials section (config-driven-testimonials widget)
+
+### v3 (next)
 - [ ] Verify and fix company dates in Experience
 - [ ] Add iCanProof as 4th project when it reaches MVP
 - [ ] Add CV download button (PDF link) in hero or contact section
-- [ ] Verify LinkedIn and NPM profile slugs are correct
-- [ ] Add Open Graph meta tags (og:title, og:description, og:image) for link previews
+- [x] Wire up favicon via app/icon.svg (Next.js App Router convention)
 
-### v3 (future)
-- [ ] Migrate to Astro or Next.js if dynamic content is needed
+### v4 (future)
 - [ ] Add a /blog section pulling from Medium RSS
 - [ ] Analytics (Plausible or Fathom — privacy-first)
 - [ ] Dark/light mode toggle
@@ -202,4 +216,5 @@ No build command needed — output directory is the repo root.
   Do not add technologies speculatively.
 - When updating project descriptions, use the voice from the portfolio letter style:
   direct, honest, slightly informal, no AI-generated filler phrases.
-- All content changes go into `index.html` — there is no separate data layer yet.
+- All content changes go into `app/page.tsx` (markup) and `app/globals.css` (styles).
+  Testimonials data lives in `testimonials.config.json`.
