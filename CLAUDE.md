@@ -209,7 +209,7 @@ To deploy: push to `main` — Vercel picks it up automatically.
 ## Notes for Claude
 
 - This is a job-search asset. Copy should be confident, direct, and precise — no fluff.
-- The 32ms stat is real and important — keep it prominent, don't downplay it.
+- The RBC 32ms dashboard achievement is mentioned in the About section text as context — not a hero stat.
 - "Open to new opportunities" badge should stay visible as long as the search is active.
   When a role is found, remove it or change to "Not currently available".
 - Tech stack in Skills section reflects actual production experience + current pet projects.

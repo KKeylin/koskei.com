@@ -94,10 +94,6 @@ export default function Home() {
             <div className="stat-num">{yearsLabel(2017, 1, 22)}</div>
             <div className="stat-label">Years in React/TS</div>
           </div>
-          <div>
-            <div className="stat-num">32ms</div>
-            <div className="stat-label">Dashboard load (from ~2s)</div>
-          </div>
         </div>
       </section>
 
@@ -232,7 +228,7 @@ export default function Home() {
       <section id="skills">
         <div className="section-label">04 — Skills</div>
         <h2>What I <strong>work with</strong></h2>
-        <FadeIn className="skills-grid">
+        <div className="skills-grid">
           <div className="skill-group">
             <div className="skill-group-title">Core</div>
             <div className="skill-items">
@@ -275,7 +271,7 @@ export default function Home() {
               <span className="skill-item">Technical writing</span><span className="skill-item">Code review</span><span className="skill-item">Mentoring</span><span className="skill-item">English (C1)</span>
             </div>
           </div>
-        </FadeIn>
+        </div>
       </section>
 
       {/* TESTIMONIALS */}
