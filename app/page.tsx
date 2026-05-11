@@ -149,8 +149,8 @@ export default function Home() {
               </div>
             </div>
             <div className="proj-links">
-              <a href="https://config-driven-testimonials-demo.vercel.app/" target="_blank" rel="noopener noreferrer" className="proj-link"><IconExternalLink />Demo</a>
-              <a href="https://github.com/KKeylin/config-driven-testimonials" target="_blank" rel="noopener noreferrer" className="proj-link"><IconGitHub />GitHub</a>
+              <a href="https://cdt.koskei.com/" target="_blank" rel="noopener noreferrer" className="proj-link"><IconExternalLink />Demo</a>
+              <a href="https://github.com/KKeylin/config-driven-recommendations" target="_blank" rel="noopener noreferrer" className="proj-link"><IconGitHub />GitHub</a>
               <a href="https://www.npmjs.com/package/config-driven-testimonials" target="_blank" rel="noopener noreferrer" className="proj-link"><IconNpm />NPM</a>
               <a href="#cdt-note" className="proj-link proj-link-internal">↓ Live on this page</a>
             </div>
@@ -165,7 +165,7 @@ export default function Home() {
               </div>
             </div>
             <div className="proj-links">
-              <a href="https://slotpaste.vercel.app/" target="_blank" rel="noopener noreferrer" className="proj-link"><IconExternalLink />Demo</a>
+              <a href="https://slotpaste.koskei.com/" target="_blank" rel="noopener noreferrer" className="proj-link"><IconExternalLink />Demo</a>
               <a href="https://github.com/KKeylin/slotpaste" target="_blank" rel="noopener noreferrer" className="proj-link"><IconGitHub />GitHub</a>
             </div>
           </FadeIn>
@@ -180,6 +180,7 @@ export default function Home() {
             </div>
             <div className="proj-links">
               <a href="https://playshelf-eight.vercel.app/" target="_blank" rel="noopener noreferrer" className="proj-link"><IconExternalLink />Demo</a>
+              <a href="https://github.com/KKeylin/playshelf" target="_blank" rel="noopener noreferrer" className="proj-link"><IconGitHub />GitHub</a>
             </div>
           </FadeIn>
 
