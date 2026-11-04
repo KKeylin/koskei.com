@@ -8,8 +8,8 @@ const config = {
   ...raw,
   theme: {
     ...raw.theme,
-    colorScheme: 'dark' as const,
-    accentColor: '#63b3ed',
+    colorScheme: 'light' as const,
+    accentColor: '#d63b14',
     showHeader: false,
   },
 }

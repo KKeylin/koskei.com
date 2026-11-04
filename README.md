@@ -6,6 +6,8 @@ Personal landing page for [Kostiantyn Keilin](https://koskei.com) — Senior Fro
 
 Next.js (App Router) · TypeScript · React 19. No external UI library.
 
+Visitor stats: Vercel Web Analytics (`@vercel/analytics`), cookieless.
+
 ## Deploy
 
 Hosted on Vercel. Deploys automatically on push to `main`.

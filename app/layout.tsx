@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
-import { Space_Mono, Inter } from 'next/font/google'
+import { Space_Mono, Inter, Inter_Tight } from 'next/font/google'
+import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
 const spaceMono = Space_Mono({
@@ -14,6 +15,12 @@ const inter = Inter({
   variable: '--font-sans',
 })
 
+const interTight = Inter_Tight({
+  weight: ['500', '600'],
+  subsets: ['latin'],
+  variable: '--font-display',
+})
+
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Person',
@@ -21,7 +28,6 @@ const jsonLd = {
   jobTitle: 'Senior Front-End Engineer',
   url: 'https://koskei.com',
   email: 'keilinkostiantyn@gmail.com',
-  telephone: '+19059621211',
   address: {
     '@type': 'PostalAddress',
     addressLocality: 'Toronto',
@@ -61,14 +67,17 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${spaceMono.variable} ${inter.variable}`}>
+    <html lang="en" className={`${spaceMono.variable} ${inter.variable} ${interTight.variable}`}>
       <head>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <Analytics />
+      </body>
     </html>
   )
 }

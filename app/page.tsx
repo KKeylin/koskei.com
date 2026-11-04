@@ -47,12 +47,6 @@ const IconLocation = () => (
   </svg>
 )
 
-const IconPhone = () => (
-  <svg viewBox="0 0 24 24" fill="currentColor">
-    <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
-  </svg>
-)
-
 const IconGlobe = () => (
   <svg viewBox="0 0 24 24" fill="currentColor">
     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
@@ -62,38 +56,63 @@ const IconGlobe = () => (
 export default function Home() {
   return (
     <>
-      <nav>
+      <header className="site-header">
+        <nav aria-label="Primary">
+          <ul className="nav-links">
+            <li><a href="#about">About</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#experience">Experience</a></li>
+            <li><a href="#testimonials">Testimonials</a></li>
+          </ul>
+        </nav>
         <a href="#hero" className="nav-logo">koskei.com</a>
-        <ul className="nav-links">
-          <li><a href="#about">About</a></li>
-          <li><a href="#projects">Projects</a></li>
-          <li><a href="#experience">Experience</a></li>
-          <li><a href="#skills">Skills</a></li>
-          <li><a href="#testimonials">Testimonials</a></li>
-          <li><a href="#contact">Contact</a></li>
-        </ul>
-      </nav>
+        <a href="#contact" className="nav-cta"><span>Get in touch</span><i aria-hidden="true">→</i></a>
+      </header>
 
+      <main>
       {/* HERO */}
       <section id="hero">
-        <div className="hero-eyebrow">Senior Front-End Engineer</div>
-        <h1><strong>Kostiantyn</strong><br />Keilin</h1>
+        <div className="avail-badge">Open to the right opportunity</div>
+        <h1>
+          Senior front-end engineer.
+          <span className="h1-dim">Enterprise UIs that stay fast and coherent.</span>
+        </h1>
         <p className="hero-sub">
-          15+ years building enterprise-grade interfaces. Specialising in <span>React</span>, <span>TypeScript</span>, micro-frontends, and config-driven architecture.
+          Kostiantyn Keilin. React, TypeScript, micro-frontends and config-driven architecture, based in Toronto.
         </p>
         <div className="hero-actions">
           <a href="#contact" className="btn btn-primary">Get in touch</a>
-          <a href="https://github.com/KKeylin" target="_blank" rel="noopener noreferrer" className="btn btn-outline">GitHub ↗</a>
+          <a href="#projects" className="btn btn-outline">See projects</a>
         </div>
-        <div className="hero-stats">
-          <div>
-            <div className="stat-num">{yearsLabel(2011, 4, 15)}</div>
-            <div className="stat-label">Years of experience</div>
+
+        <div className="stat-strip">
+          <div className="stat">
+            <div className="stat-num">~2 s → 32 ms</div>
+            <div className="stat-label">Dashboard load at RBC Capital Markets</div>
           </div>
-          <div>
-            <div className="stat-num">{yearsLabel(2017, 1, 22)}</div>
-            <div className="stat-label">Years in React/TS</div>
+          <div className="stat">
+            <div className="stat-num">{yearsLabel(2011, 4, 15)} / {yearsLabel(2017, 1, 22)}</div>
+            <div className="stat-label">Years in front-end / in React and TypeScript</div>
           </div>
+          <div className="stat">
+            <div className="stat-num">~20</div>
+            <div className="stat-label">Engineers using the AI review assistant I built</div>
+          </div>
+          <div className="stat">
+            <div className="stat-num">6 weeks</div>
+            <div className="stat-label">To deliver a core workflow estimated at 6–9 months</div>
+          </div>
+        </div>
+
+        <div className="proof-bar">
+          <span className="proof-label">Worked with</span>
+          <ul>
+            <li>RBC Capital Markets</li>
+            <li>CI Financial</li>
+            <li>Deloitte <small>via Trinetix</small></li>
+            <li>Sophia Genetics</li>
+            <li>EPAM</li>
+          </ul>
         </div>
       </section>
 
@@ -103,13 +122,17 @@ export default function Home() {
         <h2>Who <strong>I am</strong></h2>
         <FadeIn className="about-grid">
           <div className="about-text">
-            <p>I&apos;m a Senior Front-End Engineer with over 15 years of experience, based in <strong>Toronto, Ontario, Canada</strong>. My focus is on building scalable, maintainable enterprise UIs — the kind that stay coherent as codebases grow.</p>
-            <p>I gravitate toward <strong>config-driven architecture</strong>, <strong>Feature-Sliced Design</strong>, and micro-frontend patterns. Most recently I worked on a fintech platform at <strong>RBC Capital Markets</strong> via EPAM, where I brought a critical dashboard from ~2 seconds load time down to 32ms through prioritised data fetching.</p>
+            <p>I&apos;m a Senior Front-End Engineer at <strong>CI Financial</strong>, working on an internal asset-management platform for investment-fund staff. Over 15 years in front-end and over 9 in React and TypeScript, mostly on the heavier end of enterprise: fintech dashboards, real-time data grids, systems where performance isn&apos;t optional.</p>
+            <p>Before that I spent nearly four years on a fintech platform at <strong>RBC Capital Markets</strong> via EPAM. The primary dashboard took about 2 seconds to load. I redesigned the data fetching so the first 200 rows arrive in 20 ms and the rest stream in the background. Load time went from ~2 s to <strong>32 ms</strong>.</p>
+            <p>I gravitate toward architecture problems: micro-frontends, config-driven interfaces, Feature-Sliced Design, component libraries meant to outlast the team that built them. At CI that now includes tooling for the team itself, like <strong>JoeJim</strong>, an AI pre-merge review assistant used by about 20 engineers.</p>
             <p>I write about engineering trade-offs on <strong>Medium</strong> and <strong>LinkedIn</strong> — mostly about the stuff that doesn&apos;t fit in tutorials.</p>
-            <div className="avail-badge">Open to new opportunities</div>
           </div>
           <div className="about-meta">
             <Image src="/photo.jpg" alt="Kostiantyn Keilin" width={400} height={400} className="avatar" priority />
+            <div className="meta-row">
+              <span className="meta-key">Currently</span>
+              <span className="meta-val">Senior Front-End Engineer · CI Financial</span>
+            </div>
             <div className="meta-row">
               <span className="meta-key">Location</span>
               <span className="meta-val">Toronto, Ontario · Canada</span>
@@ -120,15 +143,11 @@ export default function Home() {
             </div>
             <div className="meta-row">
               <span className="meta-key">Core stack</span>
-              <span className="meta-val">React · TypeScript · Next.js · Redux</span>
+              <span className="meta-val">React · TypeScript · Redux · Module Federation</span>
             </div>
             <div className="meta-row">
               <span className="meta-key">Email</span>
               <span className="meta-val"><a href="mailto:keilinkostiantyn@gmail.com">keilinkostiantyn@gmail.com</a></span>
-            </div>
-            <div className="meta-row">
-              <span className="meta-key">Phone</span>
-              <span className="meta-val">+1 905 962 1211</span>
             </div>
           </div>
         </FadeIn>
@@ -140,10 +159,51 @@ export default function Home() {
         <h2>What I&apos;ve <strong>built</strong></h2>
         <div className="projects-grid">
 
+          <FadeIn className="project-card project-feature">
+            <div className="feature-text">
+              <div className="proj-label">Product</div>
+              <div className="proj-name"><span aria-hidden="true">{'//'}</span> jpaste<small className="proj-status">In App Store review</small></div>
+              <p className="feature-lead">Just click. Just paste. Save any text once, arrange it on a canvas, paste it anywhere as plain text. One universal app for Mac, iPad and iPhone.</p>
+              <div className="proj-desc">It started as slotpaste, my front-end prototype: an Electron app first, then a PWA I used personally for months. jpaste is its native rebuild. I wrote 6,188 lines of specification before the first line of code, built it with AI models, put it through audits, and wrote up every working day in a public developer diary.</div>
+              <ul className="feature-facts">
+                <li>13 languages, one purchase for all three devices, no subscription</li>
+                <li>Three privacy levels per board, up to a passphrase vault on AES-256-GCM</li>
+                <li>No account, no server, no analytics: sync runs through the user&apos;s own iCloud</li>
+              </ul>
+              <div className="feature-stack">
+                <span className="feature-stack-key">App</span>
+                <span className="tag">SwiftUI</span><span className="tag">SwiftData</span><span className="tag">CloudKit</span><span className="tag">StoreKit 2</span>
+              </div>
+              <div className="feature-stack">
+                <span className="feature-stack-key">Prototype</span>
+                <span className="tag">React</span><span className="tag">TypeScript</span><span className="tag">Tailwind</span><span className="tag">PWA</span>
+              </div>
+            </div>
+            <div className="feature-media">
+              <Image
+                src="/projects/jpaste-mac.jpg"
+                alt="jpaste on a Mac: a light canvas board with name, address, bank and reply snippets arranged in colour groups"
+                width={1600}
+                height={1000}
+                sizes="(max-width: 900px) 100vw, 640px"
+                className="feature-shot"
+              />
+            </div>
+            <div className="proj-links feature-links">
+              <a href="https://www.jpaste.com/" target="_blank" rel="noopener noreferrer" className="proj-link"><IconExternalLink />jpaste.com</a>
+              <span className="proj-link is-pending" aria-disabled="true">App Store · in review</span>
+              <a href="https://www.jpaste.com/diary" target="_blank" rel="noopener noreferrer" className="proj-link"><IconExternalLink />Developer diary</a>
+              <a href="https://medium.com/@konstantinkeylin/just-paste-it-part-0-3d68f715b38d" target="_blank" rel="noopener noreferrer" className="proj-link"><IconMedium />Diary on Medium</a>
+              <a href="https://slotpaste.koskei.com/" target="_blank" rel="noopener noreferrer" className="proj-link"><IconExternalLink />Prototype demo</a>
+              <a href="https://github.com/KKeylin/slotpaste" target="_blank" rel="noopener noreferrer" className="proj-link"><IconGitHub />Prototype on GitHub</a>
+            </div>
+          </FadeIn>
+
           <FadeIn className="project-card">
             <div>
-              <div className="proj-name"><span>//</span> config-driven-testimonials</div>
-              <div className="proj-desc">A React component library for rendering testimonial blocks from a config. Published on NPM. Fully typed Zod schema for runtime validation — the config drives everything, components know nothing about the source. Built in a Turborepo monorepo with a live Next.js demo and settings generator.</div>
+              <div className="proj-label">Open source · npm</div>
+              <div className="proj-name"><span aria-hidden="true">{'//'}</span> config-driven-testimonials</div>
+              <div className="proj-desc">A React component library for rendering testimonial blocks from a config. Published on NPM. Fully typed Zod schema for runtime validation — the config drives everything, components know nothing about the source. Built in a Turborepo monorepo with a live Next.js demo and settings generator. Built to WCAG 2.1 AA, with a 100/100 Lighthouse accessibility score.</div>
               <div className="proj-tags">
                 <span className="tag">React</span><span className="tag">TypeScript</span><span className="tag">Zod</span><span className="tag">Turborepo</span><span className="tag">Next.js</span><span className="tag">NPM</span>
               </div>
@@ -158,29 +218,17 @@ export default function Home() {
 
           <FadeIn className="project-card">
             <div>
-              <div className="proj-name"><span>//</span> slotpaste</div>
-              <div className="proj-desc">A personal clipboard for form-filling. Store reusable snippets — names, addresses, boilerplate — and paste them into forms without dragging styles along. The canvas view lets you group snippets spatially, which turned out more useful than a flat list. Started as an Electron app, moved to PWA after hitting performance issues. Includes a private mode with encryption.</div>
+              <div className="proj-label">Architecture experiment</div>
+              <div className="proj-name"><span aria-hidden="true">{'//'}</span> playshelf</div>
+              <div className="proj-desc">A take-home task that turned into an architecture experiment. Four layers — UI, hooks, store, repository. Components read the store through useSyncExternalStore, and the native storage event keeps every open tab in sync with no backend. Data lives in localStorage behind a repository with 300 ms simulated latency. Components are documented in Storybook.</div>
               <div className="proj-tags">
-                <span className="tag">React</span><span className="tag">TypeScript</span><span className="tag">Tailwind</span><span className="tag">PWA</span>
-              </div>
-            </div>
-            <div className="proj-links">
-              <a href="https://slotpaste.koskei.com/" target="_blank" rel="noopener noreferrer" className="proj-link"><IconExternalLink />Demo</a>
-              <a href="https://github.com/KKeylin/slotpaste" target="_blank" rel="noopener noreferrer" className="proj-link"><IconGitHub />GitHub</a>
-            </div>
-          </FadeIn>
-
-          <FadeIn className="project-card">
-            <div>
-              <div className="proj-name"><span>//</span> playshelf</div>
-              <div className="proj-desc">A test-task project that became an interesting architecture experiment. Real-time sync across browser tabs, no backend — everything runs in localStorage with 300ms simulated latency. Built with Next.js and Radix UI as required by spec.</div>
-              <div className="proj-tags">
-                <span className="tag">Next.js</span><span className="tag">TypeScript</span><span className="tag">Radix UI</span><span className="tag">localStorage</span>
+                <span className="tag">Next.js</span><span className="tag">TypeScript</span><span className="tag">Radix UI</span><span className="tag">Storybook</span><span className="tag">localStorage</span>
               </div>
             </div>
             <div className="proj-links">
               <a href="https://playshelf-eight.vercel.app/" target="_blank" rel="noopener noreferrer" className="proj-link"><IconExternalLink />Demo</a>
               <a href="https://github.com/KKeylin/playshelf" target="_blank" rel="noopener noreferrer" className="proj-link"><IconGitHub />GitHub</a>
+              <a href="https://playshelf-storybook.vercel.app/" target="_blank" rel="noopener noreferrer" className="proj-link"><IconExternalLink />Storybook</a>
             </div>
           </FadeIn>
 
@@ -193,34 +241,77 @@ export default function Home() {
         <h2>Companies I&apos;ve <strong>worked with</strong></h2>
         <FadeIn className="companies-list">
           <div className="company-row">
-            <span className="company-period">2022 – 2026</span>
-            <div className="company-name">EPAM Systems<small>via First Derivatives · Client: RBC Capital Markets</small></div>
-            <span className="company-role">Senior FE Engineer</span>
+            <span className="company-period">Jun 2026 – now</span>
+            <div className="company-body">
+              <div className="company-name">CI Financial<small>Internal asset-management platform for investment-fund staff</small></div>
+              <ul className="company-points">
+                <li><strong>JoeJim</strong>: a local AI pre-merge review assistant. First version built in one evening, now used across the engineering team (about 20 developers, front end and back end). It fact-checks its own findings and has a multi-run mode that measures verdict variance. Review cycles typically dropped from 6–8 rounds to 1–2.</li>
+                <li><strong>Yoda</strong>: a tool for deep audits of complex tasks.</li>
+                <li>Audited the UI against the project&apos;s component set and revived Storybook. The audit became the framework for UI unification, with execution delegated across the team in peak season.</li>
+                <li>Delivered a core internal workflow in six weeks against a 6–9 month estimate.</li>
+              </ul>
+            </div>
+            <span className="company-role">Senior Front-End Engineer</span>
           </div>
           <div className="company-row">
-            <span className="company-period">2020 – 2022</span>
-            <div className="company-name">Varteq<small>Enterprise product development</small></div>
-            <span className="company-role">Senior FE Engineer</span>
+            <span className="company-period">Jul 2022 – Mar 2026</span>
+            <div className="company-body">
+              <div className="company-name">EPAM Systems<small>via First Derivative · Client: RBC Capital Markets</small></div>
+              <ul className="company-points">
+                <li>Cut the primary dashboard load from ~2 s to 32 ms: first 200 rows in 20 ms, the rest streamed in the background.</li>
+                <li>Micro-frontends on Module Federation (PSA pattern); migrated my own module from React 16.8 to 18.</li>
+                <li>Built a config-driven form system and AG-Grid / MUI interfaces for real-time financial data.</li>
+              </ul>
+            </div>
+            <span className="company-role">Senior Front-End Engineer</span>
           </div>
           <div className="company-row">
-            <span className="company-period">Mar–Sep 2020</span>
-            <div className="company-name">Trinetix<small>Client: Deloitte</small></div>
-            <span className="company-role">FE Engineer</span>
+            <span className="company-period">Oct 2020 – Jan 2022</span>
+            <div className="company-body">
+              <div className="company-name">Varteq<small>Enterprise product development</small></div>
+              <ul className="company-points">
+                <li>Next.js with SSR for a medical data UI.</li>
+                <li>A shared table component cut building a new table-based page from about a week to about a day.</li>
+                <li>Front-end architecture planning for Sophia Genetics (Next.js SSR).</li>
+              </ul>
+            </div>
+            <span className="company-role">Front-End Engineer</span>
           </div>
           <div className="company-row">
-            <span className="company-period">2018 – 2020</span>
-            <div className="company-name">Litslink<small>Software development studio</small></div>
-            <span className="company-role">FE Engineer</span>
+            <span className="company-period">Mar – Sep 2020</span>
+            <div className="company-body">
+              <div className="company-name">Trinetix<small>Client: Deloitte</small></div>
+              <ul className="company-points">
+                <li>Rebuilt a Deloitte internal service for 40+ engineers.</li>
+                <li>90%+ unit test coverage with Jest and React Testing Library.</li>
+              </ul>
+            </div>
+            <span className="company-role">Front-End Engineer</span>
           </div>
           <div className="company-row">
-            <span className="company-period">2017 – 2018</span>
-            <div className="company-name">Arnit</div>
-            <span className="company-role">FE Engineer</span>
+            <span className="company-period">Nov 2018 – Mar 2020</span>
+            <div className="company-body">
+              <div className="company-name">Litslink<small>Software development studio</small></div>
+              <ul className="company-points">
+                <li>Sole front-end developer on Fibonacci.Jobs, taking the MVP from 30% to 70%.</li>
+                <li>Accessible registration flows to WCAG 2.1 and EN 301 549; forms adapted for GDPR.</li>
+              </ul>
+            </div>
+            <span className="company-role">Front-End Engineer</span>
+          </div>
+          <div className="company-row">
+            <span className="company-period">Jul 2017 – Oct 2018</span>
+            <div className="company-body">
+              <div className="company-name">Arnit</div>
+            </div>
+            <span className="company-role">Front-End Engineer</span>
           </div>
           <div className="company-row">
             <span className="company-period">2011 – 2017</span>
-            <div className="company-name">Earlier experience<small>Various agencies and freelance</small></div>
-            <span className="company-role">Web Developer</span>
+            <div className="company-body">
+              <div className="company-name">Earlier experience<small>Various agencies and freelance</small></div>
+            </div>
+            <span className="company-role">Front-End Web Developer</span>
           </div>
         </FadeIn>
       </section>
@@ -231,39 +322,21 @@ export default function Home() {
         <h2>What I <strong>work with</strong></h2>
         <div className="skills-grid">
           <div className="skill-group">
-            <div className="skill-group-title">Core</div>
+            <div className="skill-group-title">Strong</div>
             <div className="skill-items">
-              <span className="skill-item">React</span><span className="skill-item">TypeScript</span><span className="skill-item">Next.js</span><span className="skill-item">Redux</span><span className="skill-item">JavaScript</span>
+              <span className="skill-item">JavaScript</span><span className="skill-item">TypeScript</span><span className="skill-item">React</span><span className="skill-item">HTML / CSS / SCSS</span><span className="skill-item">Redux (Thunk / Saga)</span><span className="skill-item">MUI</span><span className="skill-item">AG-Grid</span><span className="skill-item">Module Federation</span><span className="skill-item">Feature-Sliced Design</span><span className="skill-item">Config-driven architecture</span><span className="skill-item">Jest</span><span className="skill-item">React Testing Library</span><span className="skill-item">Accessibility (WCAG 2.1)</span>
             </div>
           </div>
           <div className="skill-group">
-            <div className="skill-group-title">UI &amp; styling</div>
+            <div className="skill-group-title">Working</div>
             <div className="skill-items">
-              <span className="skill-item">MUI</span><span className="skill-item">Tailwind</span><span className="skill-item">Radix UI</span><span className="skill-item">AG-Grid</span><span className="skill-item">Styled Components</span><span className="skill-item">CSS Modules</span>
+              <span className="skill-item">Next.js</span><span className="skill-item">Tailwind</span><span className="skill-item">Storybook</span><span className="skill-item">GraphQL</span><span className="skill-item">Radix UI</span><span className="skill-item">Playwright</span><span className="skill-item">Zod</span><span className="skill-item">Turborepo</span><span className="skill-item">Webpack</span><span className="skill-item">GitHub Actions</span>
             </div>
           </div>
           <div className="skill-group">
-            <div className="skill-group-title">Architecture</div>
+            <div className="skill-group-title">Familiar</div>
             <div className="skill-items">
-              <span className="skill-item">Micro-frontends</span><span className="skill-item">Module Federation</span><span className="skill-item">FSD</span><span className="skill-item">Config-driven</span><span className="skill-item">Turborepo</span>
-            </div>
-          </div>
-          <div className="skill-group">
-            <div className="skill-group-title">Testing &amp; quality</div>
-            <div className="skill-items">
-              <span className="skill-item">Jest</span><span className="skill-item">React Testing Library</span><span className="skill-item">Playwright</span><span className="skill-item">axe-core</span><span className="skill-item">WCAG 2.1 / AODA</span>
-            </div>
-          </div>
-          <div className="skill-group">
-            <div className="skill-group-title">Tooling &amp; infra</div>
-            <div className="skill-items">
-              <span className="skill-item">Vite</span><span className="skill-item">Webpack</span><span className="skill-item">Babel</span><span className="skill-item">GitHub Actions</span><span className="skill-item">Vercel</span><span className="skill-item">AWS (S3, Lambda)</span><span className="skill-item">Supabase</span><span className="skill-item">Zod</span>
-            </div>
-          </div>
-          <div className="skill-group">
-            <div className="skill-group-title">Other</div>
-            <div className="skill-items">
-              <span className="skill-item">Angular</span><span className="skill-item">Node.js</span><span className="skill-item">Git</span><span className="skill-item">REST</span><span className="skill-item">GraphQL</span>
+              <span className="skill-item">Node.js (tooling, npm authoring)</span><span className="skill-item">Angular (earlier, not current)</span><span className="skill-item">SwiftUI</span>
             </div>
           </div>
           <div className="skill-group">
@@ -285,7 +358,7 @@ export default function Home() {
         </FadeIn>
         <div className="cdt-note-panel">
           <div className="cdt-note-inner">
-            <div className="cdt-note-label">// config-driven-testimonials — live integration</div>
+            <div className="cdt-note-label">{'// config-driven-testimonials — live integration'}</div>
             <p>The testimonials above are rendered directly from my open-source npm package. A single JSON config drives everything — layout, content, avatars. No backend, no CMS. Drop it into any React app and it just works.</p>
             <code>npm install config-driven-testimonials</code>
           </div>
@@ -322,16 +395,16 @@ export default function Home() {
         <h2>Let&apos;s <strong>talk</strong></h2>
         <FadeIn className="contact-inner">
           <div className="contact-text">
-            <p>I&apos;m actively looking for my next role in fintech or enterprise front-end. If you&apos;re building something interesting and need someone who thinks about architecture as hard as they think about code — reach out.</p>
+            <p>I&apos;m open to the right opportunity in fintech or enterprise front-end. If you&apos;re building something interesting and need someone who thinks about architecture as hard as they think about code — reach out.</p>
             <a href="mailto:keilinkostiantyn@gmail.com" className="contact-email">keilinkostiantyn@gmail.com</a>
           </div>
           <div className="contact-info">
             <div className="contact-row"><IconLocation />Toronto, Ontario · Canada</div>
-            <div className="contact-row"><IconPhone />+1 905 962 1211</div>
             <div className="contact-row"><IconGlobe />koskei.com</div>
           </div>
         </FadeIn>
       </section>
+      </main>
 
       <footer>
         <span className="footer-copy">© 2026 Kostiantyn Keilin</span>
