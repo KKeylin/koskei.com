@@ -84,6 +84,8 @@ section {
   padding: 7rem var(--gutter);
   border-top: 1px solid var(--line);
 }
+/* Ruled lists (experience, skills, links) have no closing rule: the next
+   section's top border closes them, so two rules never frame an empty gap. */
 .dissolve + section { border-top: 0; }
 
 /* HERO */
@@ -166,24 +168,36 @@ h1 .h1-dim { display: block; color: var(--dim); }
 /* INTRO — pinned hero. The motion runs as native scroll-driven animations
    (keyframes below); IntroScene writes the same transforms inline only where
    those are unsupported. The rules here are the resting state, which is also
-   the reduced-motion state. */
+   the reduced-motion state.
+   The copy and the track are siblings: on desktop both are pinned over each
+   other, on a phone the copy scrolls away first and the track follows.
+   The stage is a size container, so the dial is placed in cqw/cqh: the same
+   box the reveal disc is centred in, whatever the scrollbar or mobile toolbar. */
 .intro {
   max-width: none;
   height: 260vh;
   padding: 0;
   border-top: 0;
 }
-.intro-stage {
-  position: sticky; top: 0;
-  height: 100vh; height: 100svh;
-  overflow: hidden;
-}
 .intro-copy {
-  position: relative; z-index: 2;
-  width: 50%; height: 100%;
+  position: sticky; top: 0; z-index: 1;
+  width: 50%; height: 100vh; height: 100lvh;
   display: flex; flex-direction: column; justify-content: center;
   padding: 6rem 3rem 2.5rem max(var(--gutter), calc((100vw - var(--wrap)) / 2 + var(--gutter)));
   will-change: opacity, transform;
+}
+.intro-seam { display: none; }
+.intro-track {
+  position: relative; z-index: 2;
+  height: 100%;
+  margin-top: -100vh; margin-top: -100lvh;
+  pointer-events: none;
+}
+.intro-stage {
+  position: sticky; top: 0;
+  height: 100vh; height: 100lvh;
+  overflow: hidden;
+  container-type: size;
 }
 .intro-panel {
   position: absolute; inset: 0; z-index: 3;
@@ -194,11 +208,10 @@ h1 .h1-dim { display: block; color: var(--dim); }
 }
 .intro-dial {
   position: absolute; left: 0; top: 0; z-index: 3;
-  width: min(42vw, 76vh);
-  transform: translate3d(calc(75vw - 50%), calc(50vh - 50%), 0);
+  width: min(42cqw, 76cqh);
+  transform: translate3d(calc(75cqw - 50%), calc(50cqh - 50%), 0);
   transform-origin: center;
   will-change: transform, opacity;
-  pointer-events: none;
 }
 .intro-reveal {
   position: absolute; inset: 0; z-index: 4;
@@ -216,6 +229,28 @@ h1 .h1-dim { display: block; color: var(--dim); }
   color: var(--muted);
 }
 .scroll-hint::after { content: ' ↓'; }
+
+/* Phone: the copy is a normal block, then the pixel seam, then the dark stage,
+   pinned for one more screen of scroll while the dial dives. */
+@media (max-width: 640px) {
+  .intro { height: auto; }
+  .intro-copy {
+    position: relative;
+    width: 100%; height: auto;
+    justify-content: flex-start;
+    padding: 6rem var(--gutter) 0;
+  }
+  .intro-seam { display: block; position: relative; z-index: 2; margin-top: 3rem; }
+  .intro-track { margin-top: 0; }
+  .intro-panel { transform: none; }
+  .intro-dial {
+    width: min(88cqw, 62cqh);
+    transform: translate3d(calc(50cqw - 50%), calc(50cqh - 50%), 0);
+  }
+}
+@media (prefers-reduced-motion: no-preference) and (max-width: 640px) {
+  .intro-track { height: 200vh; height: 200lvh; }
+}
 
 /* Native scroll-driven version of the intro: the browser knows every keyframe up
    front, rasters once and runs it on the compositor. The keyframes mirror the
@@ -236,9 +271,28 @@ h1 .h1-dim { display: block; color: var(--dim); }
     .intro-dial { animation-name: intro-dial, intro-dial-hide; }
     .intro-reveal { animation-name: intro-reveal; }
   }
+  /* Phone: the timeline is the track. While it scrolls in, the copy lags behind
+     (the dark seam overtakes it) and the dial lags behind the dark stage and
+     fades in; once the stage is pinned, the dive runs over the whole range. */
   @media (prefers-reduced-motion: no-preference) and (max-width: 640px) {
-    .intro-panel { animation-name: intro-panel-m; }
-    .intro-dial { animation-name: intro-dial-m, intro-dial-hide; }
+    .intro { view-timeline: none; }
+    .intro-track { view-timeline: --intro block; }
+    .intro-copy {
+      animation-name: intro-copy-m;
+      animation-timeline: view();
+      animation-range: exit 0% exit 100%;
+    }
+    .intro-panel { animation-name: none; }
+    .intro-dial {
+      animation-name: intro-dial-lag, intro-dial-m, intro-dial-hide;
+      animation-range: entry 0% entry 100%, contain 0% contain 100%, contain 0% contain 100%;
+    }
+    .intro-dial .dial {
+      animation: intro-dial-in linear both;
+      animation-timeline: --intro;
+      animation-range: entry 25% entry 85%;
+    }
+    .intro-reveal { animation-name: intro-reveal-m; }
   }
 }
 @keyframes intro-copy {
@@ -255,14 +309,14 @@ h1 .h1-dim { display: block; color: var(--dim); }
   40%, 100% { transform: scaleX(1); }
 }
 @keyframes intro-dial {
-  0% { transform: translate3d(calc(75vw - 50%), calc(50vh - 50%), 0) scale(1); opacity: 1; }
-  40%, 42% { transform: translate3d(calc(50vw - 50%), calc(50vh - 50%), 0) scale(1.25); }
-  56.5% { transform: translate3d(calc(50vw - 50%), calc(50vh - 50%), 0) scale(1.65); }
-  68% { transform: translate3d(calc(50vw - 50%), calc(50vh - 50%), 0) scale(2.21); opacity: 1; }
-  71% { transform: translate3d(calc(50vw - 50%), calc(50vh - 50%), 0) scale(2.38); }
-  85.5% { transform: translate3d(calc(50vw - 50%), calc(50vh - 50%), 0) scale(3.33); }
+  0% { transform: translate3d(calc(75cqw - 50%), calc(50cqh - 50%), 0) scale(1); opacity: 1; }
+  40%, 42% { transform: translate3d(calc(50cqw - 50%), calc(50cqh - 50%), 0) scale(1.25); }
+  56.5% { transform: translate3d(calc(50cqw - 50%), calc(50cqh - 50%), 0) scale(1.65); }
+  68% { transform: translate3d(calc(50cqw - 50%), calc(50cqh - 50%), 0) scale(2.21); opacity: 1; }
+  71% { transform: translate3d(calc(50cqw - 50%), calc(50cqh - 50%), 0) scale(2.38); }
+  85.5% { transform: translate3d(calc(50cqw - 50%), calc(50cqh - 50%), 0) scale(3.33); }
   97% { opacity: 0; }
-  100% { transform: translate3d(calc(50vw - 50%), calc(50vh - 50%), 0) scale(4.45); opacity: 0; }
+  100% { transform: translate3d(calc(50cqw - 50%), calc(50cqh - 50%), 0) scale(4.45); opacity: 0; }
 }
 @keyframes intro-reveal {
   0%, 42% { clip-path: circle(0 at 50% 50%); }
@@ -277,19 +331,36 @@ h1 .h1-dim { display: block; color: var(--dim); }
   0%, 97% { visibility: visible; }
   100% { visibility: hidden; }
 }
-@keyframes intro-panel-m {
-  0% { transform: scaleY(0.27); }
-  40%, 100% { transform: scaleY(1); }
+/* Phone keyframes. The dial lag is on `translate`, which composes with the
+   dive's `transform`, so the two ranges never fight over one property. */
+@keyframes intro-copy-m {
+  to { transform: translate3d(0, 40%, 0); }
+}
+@keyframes intro-dial-lag {
+  from { translate: 0 -22cqh; }
+  to { translate: 0 0; }
+}
+@keyframes intro-dial-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 @keyframes intro-dial-m {
-  0% { transform: translate3d(calc(50vw - 50%), calc(88vh - 50%), 0) scale(1); opacity: 1; }
-  40%, 42% { transform: translate3d(calc(50vw - 50%), calc(50vh - 50%), 0) scale(1.25); }
-  56.5% { transform: translate3d(calc(50vw - 50%), calc(50vh - 50%), 0) scale(1.65); }
-  68% { transform: translate3d(calc(50vw - 50%), calc(50vh - 50%), 0) scale(2.21); opacity: 1; }
-  71% { transform: translate3d(calc(50vw - 50%), calc(50vh - 50%), 0) scale(2.38); }
-  85.5% { transform: translate3d(calc(50vw - 50%), calc(50vh - 50%), 0) scale(3.33); }
-  97% { opacity: 0; }
-  100% { transform: translate3d(calc(50vw - 50%), calc(50vh - 50%), 0) scale(4.45); opacity: 0; }
+  0% { transform: translate3d(calc(50cqw - 50%), calc(50cqh - 50%), 0) scale(1); opacity: 1; }
+  25% { transform: translate3d(calc(50cqw - 50%), calc(50cqh - 50%), 0) scale(1.4); }
+  45% { transform: translate3d(calc(50cqw - 50%), calc(50cqh - 50%), 0) scale(1.97); opacity: 1; }
+  50% { transform: translate3d(calc(50cqw - 50%), calc(50cqh - 50%), 0) scale(2.13); }
+  75% { transform: translate3d(calc(50cqw - 50%), calc(50cqh - 50%), 0) scale(3.08); }
+  95% { opacity: 0; }
+  100% { transform: translate3d(calc(50cqw - 50%), calc(50cqh - 50%), 0) scale(4.2); opacity: 0; }
+}
+/* On a tall narrow screen 62vmax already covers the corners: the disc fills
+   the screen right as the stage lets go, with no blank stretch after it. */
+@keyframes intro-reveal-m {
+  0% { clip-path: circle(0 at 50% 50%); }
+  25% { clip-path: circle(3.9vmax at 50% 50%); }
+  50% { clip-path: circle(15.5vmax at 50% 50%); }
+  75% { clip-path: circle(34.9vmax at 50% 50%); }
+  100% { clip-path: circle(62vmax at 50% 50%); }
 }
 
 /* DIAL — every layer is its own texture: spinning and zooming never re-raster the text */
@@ -443,18 +514,30 @@ h1 .h1-dim { display: block; color: var(--dim); }
 .curtain-top, .curtain-fill { display: none; }
 .curtain-bottom { background: var(--bg); }
 
+/* Timing over the pinned range: closed 0–6%, opening, open 32–68%, closing,
+   closed 94–100%. While the stage scrolls in, the seam is lifted to just below
+   the previous section and sinks to its place; while it scrolls out, the seam
+   drops to just above the next one. Both shifts are on `translate`, apart from
+   the opening on `transform`. */
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
-    .curtain { height: 240vh; view-timeline: --curtain block; }
+    .curtain {
+      /* Seam and poster sit in the middle of what the fixed header leaves visible */
+      --mid: calc(50% + 2.25rem);
+      --open: 34vh;
+      --lift: calc(44vh + 2.25rem - var(--band) / 2);
+      height: 240vh;
+      view-timeline: --curtain block;
+    }
     .curtain-stage {
       position: sticky; top: 0;
-      height: 100vh; height: 100svh;
+      height: 100vh; height: 100lvh;
       overflow: hidden;
     }
     /* Sepia backdrop: both the light and the dark torn edges read against it */
     .curtain-show {
       position: absolute; inset: 0;
-      padding: 4.5rem var(--gutter) 1.5rem;
+      padding: 4.5rem var(--gutter) 0;
       background:
         radial-gradient(rgba(0,0,0,0.22) 1px, transparent 1.6px) 0 0 / 7px 7px,
         radial-gradient(circle at 50% 50%, #7a5527 0%, #4a3218 50%, #2a1d0f 100%);
@@ -466,8 +549,8 @@ h1 .h1-dim { display: block; color: var(--dim); }
       background: none;
       will-change: transform;
     }
-    .curtain-top { top: 0; height: calc(50% + var(--band) / 2); }
-    .curtain-bottom { top: calc(50% - var(--band) / 2); bottom: 0; }
+    .curtain-top { top: 0; height: calc(var(--mid) + var(--band) / 2); }
+    .curtain-bottom { top: calc(var(--mid) - var(--band) / 2); bottom: 0; }
     .curtain-fill { display: block; flex: 1; }
     /* Fills tuck 2px under the band so fractional layout never leaves a hairline */
     .curtain-top .curtain-fill { background: var(--bg); margin-bottom: -2px; }
@@ -479,41 +562,43 @@ h1 .h1-dim { display: block; color: var(--dim); }
       animation-timing-function: linear;
       animation-fill-mode: both;
     }
-    .curtain-top { animation-name: curtain-top; }
-    .curtain-bottom { animation-name: curtain-bottom; }
+    .curtain-top, .curtain-bottom {
+      animation-range: contain 0% contain 100%, entry 0% entry 100%, exit 0% exit 100%;
+      animation-fill-mode: both, both, forwards;
+    }
+    .curtain-top { animation-name: curtain-top, curtain-in, curtain-out; }
+    .curtain-bottom { animation-name: curtain-bottom, curtain-in, curtain-out; }
     .curtain-poster { animation-name: curtain-poster; }
   }
-  /* A landscape poster on a portrait screen: wider poster, narrower gap */
+  /* A landscape poster on a portrait screen: as wide as it gets, and the seam
+     opens to near the screen edges so the poster sits in a sepia field */
   @media (prefers-reduced-motion: no-preference) and (max-width: 640px) {
+    .curtain { --open: 30vh; }
     .curtain-poster { width: 94vw; }
-    .curtain-top { animation-name: curtain-top-m; }
-    .curtain-bottom { animation-name: curtain-bottom-m; }
   }
 }
 @keyframes curtain-top {
-  0%, 14% { transform: translate3d(0, 0, 0); }
-  40%, 68% { transform: translate3d(0, -34vh, 0); }
-  92%, 100% { transform: translate3d(0, 0, 0); }
+  0%, 6% { transform: translate3d(0, 0, 0); }
+  32%, 68% { transform: translate3d(0, calc(var(--open) * -1), 0); }
+  94%, 100% { transform: translate3d(0, 0, 0); }
 }
 @keyframes curtain-bottom {
-  0%, 14% { transform: translate3d(0, 0, 0); }
-  40%, 68% { transform: translate3d(0, 34vh, 0); }
-  92%, 100% { transform: translate3d(0, 0, 0); }
+  0%, 6% { transform: translate3d(0, 0, 0); }
+  32%, 68% { transform: translate3d(0, var(--open), 0); }
+  94%, 100% { transform: translate3d(0, 0, 0); }
 }
-@keyframes curtain-top-m {
-  0%, 14% { transform: translate3d(0, 0, 0); }
-  40%, 68% { transform: translate3d(0, -17vh, 0); }
-  92%, 100% { transform: translate3d(0, 0, 0); }
+@keyframes curtain-in {
+  from { translate: 0 calc(var(--lift) * -1); }
+  to { translate: 0 0; }
 }
-@keyframes curtain-bottom-m {
-  0%, 14% { transform: translate3d(0, 0, 0); }
-  40%, 68% { transform: translate3d(0, 17vh, 0); }
-  92%, 100% { transform: translate3d(0, 0, 0); }
+@keyframes curtain-out {
+  from { translate: 0 0; }
+  to { translate: 0 var(--lift); }
 }
 @keyframes curtain-poster {
-  0%, 16% { transform: scale(0.82) rotate(-5deg); opacity: 0.3; }
-  42%, 66% { transform: scale(1) rotate(-1.5deg); opacity: 1; }
-  90%, 100% { transform: scale(0.82) rotate(-5deg); opacity: 0.3; }
+  0%, 8% { transform: scale(0.82) rotate(-5deg); opacity: 0.3; }
+  34%, 66% { transform: scale(1) rotate(-1.5deg); opacity: 1; }
+  92%, 100% { transform: scale(0.82) rotate(-5deg); opacity: 0.3; }
 }
 
 /* DARK — How I work */
@@ -759,7 +844,6 @@ h2 strong { font-weight: 500; color: var(--dim); }
   padding: 1.5rem 0;
   border-top: 1px solid var(--line);
 }
-.company-row:last-child { border-bottom: 1px solid var(--line); }
 .company-period {
   grid-area: period;
   font-family: var(--mono), monospace;
@@ -804,7 +888,6 @@ h2 strong { font-weight: 500; color: var(--dim); }
   padding: 1.5rem 0;
   border-top: 1px solid var(--line);
 }
-.skill-group:last-child { border-bottom: 1px solid var(--line); }
 .skill-group-title {
   font-family: var(--mono), monospace;
   font-size: 11px;
@@ -825,12 +908,11 @@ h2 strong { font-weight: 500; color: var(--dim); }
 .links-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  border-top: 1px solid var(--line);
 }
 .link-card {
   display: flex; align-items: center; gap: 1rem;
   padding: 1.5rem 1rem 1.5rem 0;
-  border-bottom: 1px solid var(--line);
+  border-top: 1px solid var(--line);
   text-decoration: none;
   transition: padding-left 0.2s;
 }
@@ -945,7 +1027,8 @@ footer {
   .cdt-note-panel, .nav-cta i, .link-card { transition: none; }
   /* Static hero with the dial beside the copy; scenes laid out flat at their end state */
   .intro { height: auto; }
-  .intro-stage { position: relative; }
+  .intro-copy, .intro-stage { position: relative; }
+  .intro-track { height: auto; }
   .dial-spin { animation: none; }
   .scene-rbc, .scene-jj { height: auto; }
   .scene-stage { position: relative; height: auto; }
@@ -971,19 +1054,6 @@ footer {
   .nav-logo { grid-row: 1; grid-column: 1; }
   .nav-cta { grid-column: 2; }
   section { padding: 4.5rem var(--gutter); }
-  /* Hero stacks: copy on top, dial panel rises from the bottom */
-  .intro-copy {
-    z-index: 3;
-    width: 100%;
-    justify-content: flex-start;
-    padding: 6rem var(--gutter) 0;
-  }
-  .intro-panel { z-index: 2; transform-origin: center bottom; transform: scaleY(0.27); }
-  .intro-dial {
-    z-index: 2;
-    width: min(66vw, 30vh);
-    transform: translate3d(calc(50vw - 50%), calc(88vh - 50%), 0);
-  }
   .intro .proof-bar, .scroll-hint { display: none; }
   .about-grid, .contact-inner { grid-template-columns: 1fr; gap: 2.5rem; }
   .company-row { grid-template-columns: 1fr; grid-template-areas: "period" "role" "body"; gap: 0.3rem; }
