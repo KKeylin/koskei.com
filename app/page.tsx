@@ -464,7 +464,11 @@ export default function Home() {
           <div className="company-row">
             <span className="company-period">Jul 2017 – Oct 2018</span>
             <div className="company-body">
-              <div className="company-name">Arnit</div>
+              <div className="company-name">Arnit<small>Education platform</small></div>
+              <ul className="company-points">
+                <li>Front-end for a platform that ran academic competitions and olympiads: studying, turned into a game.</li>
+                <li>Started with page layouts and email templates, then React and Redux; moved from jQuery to React full-time in 2018.</li>
+              </ul>
             </div>
             <span className="company-role">Front-End Engineer</span>
           </div>
