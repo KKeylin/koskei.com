@@ -1,5 +1,10 @@
 import Image from 'next/image'
+import Dial from '@/components/Dial'
+import Dissolve from '@/components/Dissolve'
 import FadeIn from '@/components/FadeIn'
+import IntroScene from '@/components/IntroScene'
+import LetterTorus from '@/components/LetterTorus'
+import ScrollScene from '@/components/ScrollScene'
 import Testimonials from '@/components/Testimonials'
 
 function yearsLabel(startYear: number, startMonth: number, startDay: number): string {
@@ -10,6 +15,11 @@ function yearsLabel(startYear: number, startMonth: number, startDay: number): st
   const isExact = now.getMonth() === startMonth - 1 && now.getDate() === startDay
   return isExact ? `${years}` : `${years}+`
 }
+
+// Scroll progress at which each of the 8 review rounds is crossed out, matching
+// the moments the 08 → 02 counter (ease-out over 0.1–0.7) passes 7, 6 … 3.
+// Rounds 1–2 survive and light up at the end.
+const ROUND_MARKS = [0.7, 0.7, 0.44, 0.32, 0.25, 0.2, 0.16, 0.12]
 
 const IconExternalLink = () => (
   <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -70,51 +80,174 @@ export default function Home() {
       </header>
 
       <main>
-      {/* HERO */}
-      <section id="hero">
-        <div className="avail-badge">Open to the right opportunity</div>
-        <h1>
-          Senior front-end engineer.
-          <span className="h1-dim">Enterprise UIs that stay fast and coherent.</span>
-        </h1>
-        <p className="hero-sub">
-          Kostiantyn Keilin. React, TypeScript, micro-frontends and config-driven architecture, based in Toronto.
-        </p>
-        <div className="hero-actions">
-          <a href="#contact" className="btn btn-primary">Get in touch</a>
-          <a href="#projects" className="btn btn-outline">See projects</a>
-        </div>
+      {/* HERO — the dial opens up and its centre becomes the next section */}
+      <IntroScene
+        dial={<Dial />}
+        copy={
+          <>
+            <div className="avail-badge">Open to the right opportunity</div>
+            <h1>
+              Senior front-end engineer.
+              <span className="h1-dim">Enterprise UIs that stay fast and coherent.</span>
+            </h1>
+            <p className="hero-sub">
+              Kostiantyn Keilin. {yearsLabel(2011, 4, 15)} years in front-end, {yearsLabel(2017, 1, 22)} in React and TypeScript. Micro-frontends and config-driven architecture, based in Toronto.
+            </p>
+            <div className="hero-actions">
+              <a href="#contact" className="btn btn-primary">Get in touch</a>
+              <a href="#projects" className="btn btn-outline">See projects</a>
+            </div>
+            <div className="proof-bar">
+              <span className="proof-label">Worked with</span>
+              <ul>
+                <li>RBC Capital Markets</li>
+                <li>CI Financial</li>
+                <li>Deloitte <small>via Trinetix</small></li>
+                <li>Sophia Genetics</li>
+                <li>EPAM</li>
+              </ul>
+            </div>
+          </>
+        }
+      />
 
-        <div className="stat-strip">
-          <div className="stat">
-            <div className="stat-num">~2 s → 32 ms</div>
-            <div className="stat-label">Dashboard load at RBC Capital Markets</div>
-          </div>
-          <div className="stat">
-            <div className="stat-num">{yearsLabel(2011, 4, 15)} / {yearsLabel(2017, 1, 22)}</div>
-            <div className="stat-label">Years in front-end / in React and TypeScript</div>
-          </div>
-          <div className="stat">
-            <div className="stat-num">~20</div>
-            <div className="stat-label">Engineers using the AI review assistant I built</div>
-          </div>
-          <div className="stat">
-            <div className="stat-num">6 weeks</div>
-            <div className="stat-label">To deliver a core workflow estimated at 6–9 months</div>
+      {/* CASE — RBC dashboard load */}
+      <ScrollScene id="case-rbc" className="scene scene-rbc">
+        <div className="scene-stage">
+          <div className="scene-grid">
+            <div className="scene-copy">
+              <div className="section-label">Case · RBC Capital Markets</div>
+              <h2>The dashboard took two seconds. <strong>Now it takes 32&nbsp;ms.</strong></h2>
+              <p className="scene-text">The primary dashboard of a fintech platform at RBC Capital Markets. I redesigned the data fetching into two steps: the first 200 rows land in 20 ms, and the rest streams in the background without blocking the user.</p>
+              <div className="scene-counter" aria-hidden="true">
+                <span className="scene-num">
+                  <span data-count-from="2000" data-count-to="32" data-count-range="0.05,0.72">2000</span>
+                  <small>ms</small>
+                </span>
+                <span className="scene-num-label">Primary dashboard load <em>~2 s → 32 ms</em></span>
+              </div>
+              <p className="sr-only">Load time went from about 2 seconds to 32 milliseconds.</p>
+            </div>
+
+            <div className="receipt">
+              <div className="receipt-head"><span>Load budget</span><span>Primary dashboard</span></div>
+              <div className="receipt-group">Before</div>
+              <div className="receipt-line" data-step="0.04"><span>Dashboard load</span><i /><b>~2 s</b></div>
+              <div className="receipt-group">After · two-step prioritised fetch</div>
+              <div className="receipt-line" data-step="0.2"><span>Step 1 · first 200 rows</span><i /><b>20 ms</b></div>
+              <div className="receipt-note" data-step="0.32">The second frame at 60 Hz</div>
+              <div className="receipt-line" data-step="0.44"><span>Step 2 · remaining rows</span><i /><b>Background</b></div>
+              <div className="receipt-line" data-step="0.56"><span>User interaction</span><i /><b>Never blocked</b></div>
+              <div className="receipt-total" data-step="0.72"><span>Dashboard load</span><b>~2 s → 32 ms</b></div>
+            </div>
           </div>
         </div>
+      </ScrollScene>
 
-        <div className="proof-bar">
-          <span className="proof-label">Worked with</span>
-          <ul>
-            <li>RBC Capital Markets</li>
-            <li>CI Financial</li>
-            <li>Deloitte <small>via Trinetix</small></li>
-            <li>Sophia Genetics</li>
-            <li>EPAM</li>
-          </ul>
+      {/* CASE — JoeJim, the review assistant at CI Financial */}
+      <ScrollScene id="case-joejim" className="scene scene-jj">
+        <div className="scene-stage">
+          <div className="scene-grid">
+            <div className="scene-copy">
+              <div className="section-label">Tooling · CI Financial</div>
+              <h2>Two heads are better than&nbsp;none. <strong>Meet JoeJim.</strong></h2>
+              <p className="scene-text">A local AI pre-merge review assistant I built at CI Financial. The first version took one evening; now about 20 engineers, front end and back end, run their changes past it before merge. One head finds the problems, the other fact-checks them, and a multi-run mode measures how much the verdicts vary.</p>
+              <div className="scene-counter" aria-hidden="true">
+                <span className="scene-num">
+                  <span data-count-from="8" data-count-to="2" data-count-pad="2" data-count-range="0.1,0.7">08</span>
+                  <small>rounds</small>
+                </span>
+                <span className="scene-num-label">Review rounds per PR <em>typically 6–8 → 1–2</em></span>
+              </div>
+              <p className="sr-only">Review cycles typically dropped from 6–8 rounds to 1–2.</p>
+            </div>
+
+            <div className="receipt">
+              <div className="receipt-head"><span>Pre-merge review</span><span>JoeJim™</span></div>
+              <div className="receipt-line" data-step="0.04"><span>Runs</span><i /><b>Locally, before merge</b></div>
+              <div className="receipt-line" data-step="0.16"><span>Head 1 · review</span><i /><b>Findings</b></div>
+              <div className="receipt-line" data-step="0.28"><span>Head 2 · fact-check</span><i /><b>Its own findings</b></div>
+              <div className="receipt-line" data-step="0.4"><span>Multi-run mode</span><i /><b>Verdict variance</b></div>
+              <div className="receipt-line" data-step="0.52"><span>Used by</span><i /><b>~20 engineers · FE + BE</b></div>
+              <div className="receipt-line" data-step="0.6"><span>First version</span><i /><b>One evening</b></div>
+              <div className="receipt-total" data-step="0.7"><span>Review rounds</span><b>6–8 → 1–2*</b></div>
+              <div className="receipt-fine">* Typically. Not responsible for radiation-induced code mutations. Review responsibly.</div>
+            </div>
+
+            <div className="rounds" aria-hidden="true">
+              <span className="rounds-label">Rounds per PR</span>
+              <div className="rounds-pills">
+                {ROUND_MARKS.map((at, i) => (
+                  <span key={i} className={at < 0.7 ? 'round is-cut' : 'round is-kept'} data-at={at}>Round {i + 1}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </ScrollScene>
+
+      {/* CURTAIN — the seam into the dark section opens on a JoeJim advert, then closes */}
+      <div className="curtain" aria-hidden="true">
+        <div className="curtain-stage">
+          <div className="curtain-show">
+            <div className="curtain-poster">
+              <Image
+                src="/projects/joejim-poster.jpg"
+                alt=""
+                width={1376}
+                height={768}
+                sizes="(max-width: 640px) 90vw, 940px"
+                className="curtain-img"
+              />
+            </div>
+          </div>
+          <div className="curtain-top">
+            <div className="curtain-fill" />
+            <Dissolve to="dark" part="light" />
+          </div>
+          <div className="curtain-bottom">
+            <Dissolve to="dark" part="dark" />
+            <div className="curtain-fill" />
+          </div>
+        </div>
+      </div>
+
+      {/* HOW I WORK — dark */}
+      <section id="how" className="dark">
+        <div className="dark-inner">
+          <div className="how-copy">
+            <div className="section-label">How I work</div>
+            <h2>The numbers come from habits. <strong>Not from heroics.</strong></h2>
+            <ol className="how-list">
+              <li>
+                <h3><span>001 /</span> Performance is a feature</h3>
+                <p>~2 s to 32 ms on a fintech dashboard: the first 200 rows in 20 ms, the rest streamed in behind them.</p>
+              </li>
+              <li>
+                <h3><span>002 /</span> Config over conditionals</h3>
+                <p>A config-driven form system at RBC. An npm package where one JSON config drives everything — it renders the testimonials on this page.</p>
+              </li>
+              <li>
+                <h3><span>003 /</span> Spec before code</h3>
+                <p>jpaste started with 6,188 lines of specification and not one line of code.</p>
+              </li>
+              <li>
+                <h3><span>004 /</span> Build it once</h3>
+                <p>At Varteq a shared table component cut a new table-based page from about a week of work to about a day.</p>
+              </li>
+              <li>
+                <h3><span>005 /</span> Leave a system behind</h3>
+                <p>A UI audit at CI became the framework for unifying the interface, and the team carried it out in peak season. Storybook came back with it.</p>
+              </li>
+            </ol>
+          </div>
+          <div className="how-art" aria-hidden="true">
+            <LetterTorus />
+          </div>
         </div>
       </section>
+
+      <Dissolve to="light" />
 
       {/* ABOUT */}
       <section id="about">
