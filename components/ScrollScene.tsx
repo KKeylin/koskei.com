@@ -18,7 +18,8 @@ const clamp01 = (v: number) => Math.min(1, Math.max(0, v))
  * `[data-at]` elements are only switched on, never current. A tall section with
  * a sticky stage is pinned: progress runs while the stage is held. A section no
  * taller than the viewport is not pinned: progress runs while it passes
- * through the viewport.
+ * through the viewport. A section pulled up under the previous one sets
+ * `--lead` in CSS: progress then starts once it has scrolled that far.
  *
  * Under prefers-reduced-motion everything is shown at its end state.
  */
@@ -35,16 +36,21 @@ export default function ScrollScene({ id, className, children }: Props) {
     let current = -1
     let frame = 0
     let last = ''
+    let lead = 0
+    // A registered <length>, so the computed value is in px
+    const measure = () => {
+      lead = parseFloat(getComputedStyle(el).getPropertyValue('--lead')) || 0
+    }
 
     const render = () => {
       frame = 0
       const rect = el.getBoundingClientRect()
       const vh = window.innerHeight
-      const range = rect.height - vh
+      const range = rect.height - vh - lead
       let p = 1
       if (!reduce.matches) {
         p = range > 50
-          ? clamp01(-rect.top / range)
+          ? clamp01((-rect.top - lead) / range)
           : clamp01((vh * 0.85 - rect.top) / (rect.height * 0.8))
       }
       const value = p.toFixed(3)
@@ -80,8 +86,10 @@ export default function ScrollScene({ id, className, children }: Props) {
     }
     const reset = () => {
       last = ''
+      measure()
       schedule()
     }
+    measure()
     render()
     window.addEventListener('scroll', schedule, { passive: true })
     window.addEventListener('resize', reset)

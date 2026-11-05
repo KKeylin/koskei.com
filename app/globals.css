@@ -206,13 +206,28 @@ h1 .h1-dim { display: block; color: var(--dim); }
   transform: scaleX(0.5);
   will-change: transform;
 }
+/* The orbit (text rings past the bezel, out to the stage corners) must not
+   spill over the copy while the panel opens. It sits in a window that follows
+   the panel's left edge (shifted right by the closed half) and runs the dial's
+   own animations from 50cqw further left (`--x0`), so the two stay locked.
+   Only the orbit's canvases sit under that moving window: an animated
+   ancestor makes Chrome re-raster the dial's SVG rings at every scale of the
+   dive, a canvas is a finished texture. */
+.intro-field {
+  position: absolute; inset: 0; z-index: 3;
+  overflow: hidden;
+  translate: 50cqw 0;
+  will-change: translate;
+}
 .intro-dial {
+  --x0: 75cqw;
   position: absolute; left: 0; top: 0; z-index: 3;
   width: min(42cqw, 76cqh);
-  transform: translate3d(calc(75cqw - 50%), calc(50cqh - 50%), 0);
+  transform: translate3d(calc(var(--x0) - 50%), calc(50cqh - 50%), 0);
   transform-origin: center;
   will-change: transform, opacity;
 }
+.intro-orbit { --x0: 25cqw; }
 .intro-reveal {
   position: absolute; inset: 0; z-index: 4;
   background: var(--bg);
@@ -243,6 +258,7 @@ h1 .h1-dim { display: block; color: var(--dim); }
   .intro-seam { display: block; position: relative; z-index: 2; margin-top: 3rem; }
   .intro-track { margin-top: 0; }
   .intro-panel { transform: none; }
+  .intro-field { translate: none; }
   .intro-dial {
     width: min(88cqw, 62cqh);
     transform: translate3d(calc(50cqw - 50%), calc(50cqh - 50%), 0);
@@ -258,7 +274,7 @@ h1 .h1-dim { display: block; color: var(--dim); }
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     .intro { view-timeline: --intro block; }
-    .intro-copy, .intro-panel, .intro-dial, .intro-reveal, .scroll-hint {
+    .intro-copy, .intro-panel, .intro-field, .intro-dial, .intro-reveal, .scroll-hint {
       animation-timeline: --intro;
       animation-range: contain 0% contain 100%;
       animation-duration: auto;
@@ -268,6 +284,7 @@ h1 .h1-dim { display: block; color: var(--dim); }
     .intro-copy { animation-name: intro-copy; }
     .scroll-hint { animation-name: intro-hint; }
     .intro-panel { animation-name: intro-panel; }
+    .intro-field { animation-name: intro-field; }
     .intro-dial { animation-name: intro-dial, intro-dial-hide; }
     .intro-reveal { animation-name: intro-reveal; }
   }
@@ -282,7 +299,7 @@ h1 .h1-dim { display: block; color: var(--dim); }
       animation-timeline: view();
       animation-range: exit 0% exit 100%;
     }
-    .intro-panel { animation-name: none; }
+    .intro-panel, .intro-field { animation-name: none; }
     .intro-dial {
       animation-name: intro-dial-lag, intro-dial-m, intro-dial-hide;
       animation-range: entry 0% entry 100%, contain 0% contain 100%, contain 0% contain 100%;
@@ -308,8 +325,13 @@ h1 .h1-dim { display: block; color: var(--dim); }
   0% { transform: scaleX(0.5); }
   40%, 100% { transform: scaleX(1); }
 }
+@keyframes intro-field {
+  0% { translate: 50cqw 0; }
+  40%, 100% { translate: 0 0; }
+}
+/* Starts at --x0: 75cqw for the dial, 25cqw for the orbit in its shifted window */
 @keyframes intro-dial {
-  0% { transform: translate3d(calc(75cqw - 50%), calc(50cqh - 50%), 0) scale(1); opacity: 1; }
+  0% { transform: translate3d(calc(var(--x0) - 50%), calc(50cqh - 50%), 0) scale(1); opacity: 1; }
   40%, 42% { transform: translate3d(calc(50cqw - 50%), calc(50cqh - 50%), 0) scale(1.25); }
   56.5% { transform: translate3d(calc(50cqw - 50%), calc(50cqh - 50%), 0) scale(1.65); }
   68% { transform: translate3d(calc(50cqw - 50%), calc(50cqh - 50%), 0) scale(2.21); opacity: 1; }
@@ -380,6 +402,9 @@ h1 .h1-dim { display: block; color: var(--dim); }
 .dial-hand line { stroke: var(--accent); stroke-width: 2.5; }
 .dial-hand circle { fill: var(--accent); }
 .dial-dot { fill: var(--bg); }
+/* Canvas rings outside the bezel: the font is read from here, shown once drawn */
+.dial-field { font-family: var(--mono), monospace; opacity: 0; transition: opacity 0.6s ease; }
+.dial-field[data-ready] { opacity: 1; }
 
 /* SCENES — pinned case studies driven by ScrollScene */
 .scene {
@@ -425,6 +450,56 @@ h1 .h1-dim { display: block; color: var(--dim); }
   color: var(--muted);
 }
 .scene-num-label em { font-style: normal; padding: 2px 8px; background: var(--surface-2); color: var(--ink); }
+
+/* The intro's disc is a window into the RBC case. The case is pulled up under
+   the intro so its stage is already pinned when the dive starts; it sits on
+   top, clipped to the growing disc, and its content zooms in like a camera
+   settling on the scene. `--lead` is the dive (58% of the intro's 160vh pinned
+   range); ScrollScene starts the case's own progress after it. Only where the
+   scene is pinned and the browser runs the intro natively. */
+@property --lead {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0px;
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) and (min-width: 901px) {
+    .scene-rbc {
+      --lead: 92.8vh;
+      position: relative; z-index: 3;
+      height: calc(280vh + var(--lead));
+      margin-top: calc(-100vh - var(--lead));
+      pointer-events: none;
+      view-timeline: --rbc block;
+    }
+    .scene-rbc .scene-stage {
+      pointer-events: auto;
+      background: var(--bg);
+      animation: scene-iris linear both;
+      animation-timeline: --rbc;
+      animation-range: contain 0% contain var(--lead);
+    }
+    .scene-rbc .scene-grid {
+      animation: scene-focus linear both;
+      animation-timeline: --rbc;
+      animation-range: contain 0% contain var(--lead);
+      will-change: transform;
+    }
+    .intro-reveal { display: none; }
+  }
+}
+/* Same curve as the intro's disc; 72vmax reaches the corners of any landscape screen */
+@keyframes scene-iris {
+  0% { clip-path: circle(0 at 50% 50%); }
+  25% { clip-path: circle(4.5vmax at 50% 50%); }
+  50% { clip-path: circle(18vmax at 50% 50%); }
+  75% { clip-path: circle(40.5vmax at 50% 50%); }
+  100% { clip-path: circle(72vmax at 50% 50%); }
+}
+@keyframes scene-focus {
+  from { transform: scale(1.2); }
+  to { transform: scale(1); }
+}
 
 /* RECEIPT */
 .receipt {
@@ -1024,7 +1099,7 @@ footer {
   html { scroll-behavior: auto; }
   .avail-badge::before { animation: none; }
   .fade-in { animation: none; }
-  .cdt-note-panel, .nav-cta i, .link-card { transition: none; }
+  .cdt-note-panel, .nav-cta i, .link-card, .dial-field { transition: none; }
   /* Static hero with the dial beside the copy; scenes laid out flat at their end state */
   .intro { height: auto; }
   .intro-copy, .intro-stage { position: relative; }

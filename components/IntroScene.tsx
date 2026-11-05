@@ -6,6 +6,8 @@ import Dissolve from './Dissolve'
 type Props = {
   copy: React.ReactNode
   dial: React.ReactNode
+  /** Text rings around the dial, out to the stage corners */
+  orbit: React.ReactNode
 }
 
 const clamp01 = (v: number) => Math.min(1, Math.max(0, v))
@@ -20,12 +22,14 @@ const clamp01 = (v: number) => Math.min(1, Math.max(0, v))
  * On a phone the copy scrolls away on its own and the dark stage follows it
  * behind a pixel seam; the dive starts once the stage is pinned.
  */
-export default function IntroScene({ copy, dial }: Props) {
+export default function IntroScene({ copy, dial, orbit }: Props) {
   const root = useRef<HTMLElement>(null)
   const copyRef = useRef<HTMLDivElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
+  const fieldRef = useRef<HTMLDivElement>(null)
+  const orbitRef = useRef<HTMLDivElement>(null)
   const dialRef = useRef<HTMLDivElement>(null)
   const revealRef = useRef<HTMLDivElement>(null)
   const hintRef = useRef<HTMLDivElement>(null)
@@ -36,10 +40,12 @@ export default function IntroScene({ copy, dial }: Props) {
     const track = trackRef.current
     const stage = stageRef.current
     const panel = panelRef.current
+    const field = fieldRef.current
+    const orbitEl = orbitRef.current
     const dialEl = dialRef.current
     const reveal = revealRef.current
     const hint = hintRef.current
-    if (!el || !copyEl || !track || !stage || !panel || !dialEl || !reveal || !hint) return
+    if (!el || !copyEl || !track || !stage || !panel || !field || !orbitEl || !dialEl || !reveal || !hint) return
 
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)')
     const narrow = window.matchMedia('(max-width: 640px)')
@@ -82,12 +88,16 @@ export default function IntroScene({ copy, dial }: Props) {
       copyEl.style.transform = mobile ? '' : `translate3d(${-a * w * 0.04}px, 0, 0)`
       hint.style.opacity = String(1 - a * 4)
       panel.style.transform = mobile ? '' : `scaleX(${0.5 + 0.5 * a})`
-      if (d !== lastSize) {
-        dialEl.style.width = `${d}px`
-        lastSize = d
+      // The field follows the panel's left edge; the orbit sits that much further left in it
+      const shift = mobile ? 0 : (1 - a) * w / 2
+      field.style.translate = mobile ? '' : `${shift}px 0`
+      const opacity = String(1 - clamp01((b - 0.45) / 0.5))
+      for (const [node, x] of [[dialEl, cx], [orbitEl, cx - shift]] as const) {
+        if (d !== lastSize) node.style.width = `${d}px`
+        node.style.transform = `translate3d(${x - d / 2}px, ${cy - d / 2}px, 0) scale(${scale})`
+        node.style.opacity = opacity
       }
-      dialEl.style.transform = `translate3d(${cx - d / 2}px, ${cy - d / 2}px, 0) scale(${scale})`
-      dialEl.style.opacity = String(1 - clamp01((b - 0.45) / 0.5))
+      lastSize = d
       reveal.style.clipPath = b > 0 ? `circle(${b * b * 95}vmax at ${cx}px ${cy}px)` : 'circle(0 at 50% 50%)'
     }
 
@@ -122,6 +132,9 @@ export default function IntroScene({ copy, dial }: Props) {
       <div ref={trackRef} className="intro-track">
         <div ref={stageRef} className="intro-stage">
           <div ref={panelRef} className="intro-panel" aria-hidden="true" />
+          <div ref={fieldRef} className="intro-field" aria-hidden="true">
+            <div ref={orbitRef} className="intro-dial intro-orbit">{orbit}</div>
+          </div>
           <div ref={dialRef} className="intro-dial" aria-hidden="true">{dial}</div>
           <div ref={revealRef} className="intro-reveal" aria-hidden="true" />
           <div ref={hintRef} className="scroll-hint" aria-hidden="true">Scroll</div>

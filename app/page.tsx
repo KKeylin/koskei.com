@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import Dial from '@/components/Dial'
+import Dial, { DialOrbit } from '@/components/Dial'
 import Dissolve from '@/components/Dissolve'
 import FadeIn from '@/components/FadeIn'
 import IntroScene from '@/components/IntroScene'
@@ -83,6 +83,7 @@ export default function Home() {
       {/* HERO — the dial opens up and its centre becomes the next section */}
       <IntroScene
         dial={<Dial />}
+        orbit={<DialOrbit />}
         copy={
           <>
             <div className="avail-badge">Open to the right opportunity</div>
