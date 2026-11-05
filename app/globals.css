@@ -747,6 +747,9 @@ h1 .h1-dim { display: block; color: var(--dim); }
   font-family: var(--mono), monospace;
   image-rendering: pixelated;
 }
+/* Tucked 1px under the finale: at a fractional offset Safari otherwise leaves a
+   hairline of the light page between the two dark edges */
+.finale + .dissolve { margin-top: -1px; }
 
 .sr-only {
   position: absolute;
