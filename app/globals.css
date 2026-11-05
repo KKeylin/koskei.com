@@ -77,6 +77,18 @@ a { color: inherit; }
   transition: transform 0.25s;
 }
 .nav-cta:hover i { transform: translateX(3px); }
+/* Tablets: the links do not fit beside a centred logo, so the logo moves left
+   and the links sit by the call to action; narrower still, they go */
+@media (max-width: 1024px) {
+  .site-header { grid-template-columns: auto 1fr auto; gap: 2rem; }
+  .nav-logo { grid-row: 1; grid-column: 1; }
+  .site-header nav { grid-row: 1; grid-column: 2; justify-self: end; }
+  .nav-links { gap: 1.25rem; }
+  .nav-cta { grid-row: 1; grid-column: 3; }
+}
+@media (max-width: 800px) {
+  .site-header nav { display: none; }
+}
 
 /* SECTIONS */
 section {
