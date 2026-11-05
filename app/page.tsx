@@ -290,7 +290,7 @@ export default function Home() {
             <p>I write about engineering trade-offs on <strong>Medium</strong> and <strong>LinkedIn</strong> — mostly about the stuff that doesn&apos;t fit in tutorials.</p>
           </div>
           <div className="about-meta">
-            <Image src="/photo.jpg" alt="Kostiantyn Keilin" width={400} height={400} sizes="(max-width: 640px) 100vw, 470px" className="avatar" priority />
+            <Image src="/kostiantyn-keilin-portrait.jpg" alt="Kostiantyn Keilin" width={400} height={400} sizes="(max-width: 640px) 100vw, 470px" className="avatar" priority />
             <div className="meta-row">
               <span className="meta-key">Currently</span>
               <span className="meta-val">Senior Front-End Engineer · CI Financial</span>

@@ -801,11 +801,11 @@ h2 strong { font-weight: 500; color: var(--dim); }
 /* AVATAR */
 .avatar {
   width: 100%;
+  height: auto; /* over the height attribute, so aspect-ratio keeps it square */
   aspect-ratio: 1;
   object-fit: cover;
   display: block;
   margin-bottom: 1.5rem;
-  filter: grayscale(100%);
 }
 
 /* ABOUT */

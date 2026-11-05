@@ -58,7 +58,7 @@ koskei.com/
 │   ├── FadeIn.tsx       ← IntersectionObserver scroll-reveal wrapper
 │   └── Testimonials.tsx ← config-driven-testimonials integration
 ├── public/
-│   └── photo.jpg        ← author photo (used in About and OG tags)
+│   └── kostiantyn-keilin-portrait.jpg ← author photo (used in About and OG tags)
 ├── testimonials.config.json  ← testimonials data for the widget
 ├── next.config.ts
 ├── tsconfig.json

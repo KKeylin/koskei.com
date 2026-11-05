@@ -54,14 +54,14 @@ export const metadata: Metadata = {
     title: 'Kostiantyn Keilin — Senior Front-End Engineer',
     description:
       'Senior Front-End Engineer with 15+ years of experience. React, TypeScript, micro-frontends, config-driven architecture. Based in Toronto, Ontario.',
-    images: [{ url: '/photo.jpg' }],
+    images: [{ url: '/kostiantyn-keilin-portrait.jpg' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Kostiantyn Keilin — Senior Front-End Engineer',
     description:
       'Senior Front-End Engineer with 15+ years of experience. React, TypeScript, micro-frontends, config-driven architecture. Based in Toronto, Ontario.',
-    images: ['/photo.jpg'],
+    images: ['/kostiantyn-keilin-portrait.jpg'],
   },
 }
 
