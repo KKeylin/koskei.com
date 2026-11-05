@@ -1094,7 +1094,9 @@ h2 strong { font-weight: 500; color: var(--dim); }
   width: var(--disc); aspect-ratio: 1;
   border-radius: 50%;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  padding: 0 11%;
+  /* A share of the disc, not %: that would follow the section's width and
+     squeeze the copy into a column on very wide screens */
+  padding: 0 calc(var(--disc) * 0.24);
   background: var(--bg);
   color: var(--ink);
   text-align: center;
@@ -1250,7 +1252,7 @@ footer {
   .glyph-field { font-size: 11px; }
   /* The disc takes nearly the full width; it holds the first sentence only */
   .finale { --disc: min(94vw, 82svh); }
-  .finale-disc { padding: 0 9%; }
+  .finale-disc { padding: 0 calc(var(--disc) * 0.09); }
   .finale-more { display: none; }
   .project-card { padding: 1.5rem; }
   .feature-stack-key { flex-basis: 100%; }

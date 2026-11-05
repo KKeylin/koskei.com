@@ -50,7 +50,8 @@ export default function IntroScene({ copy, dial, orbit }: Props) {
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)')
     const narrow = window.matchMedia('(max-width: 640px)')
     // Where scroll-driven animations exist, globals.css runs the whole scene on
-    // the compositor; this effect then only pauses the dial when off screen.
+    // the compositor; this effect then only pauses the dial when off screen and
+    // refreshes the scene after a resize.
     const native = CSS.supports('animation-timeline: view()')
     let frame = 0
     let last = ''
@@ -109,15 +110,37 @@ export default function IntroScene({ copy, dial, orbit }: Props) {
       lastSize = -1
       schedule()
     }
+    // Chrome can keep the cqw/cqh in the scene's keyframes resolved for the old
+    // stage size after a resize (seen opening and closing DevTools): restart the
+    // scroll-driven animations once the size settles. Their progress comes from
+    // the scroll, so nothing jumps; the time-based ring spin is left alone.
+    let settle = 0
+    const refresh = () => {
+      clearTimeout(settle)
+      settle = window.setTimeout(() => {
+        const targets = new Set<HTMLElement>()
+        for (const animation of el.getAnimations({ subtree: true })) {
+          const target = animation.effect instanceof KeyframeEffect ? animation.effect.target : null
+          if (!(animation.timeline instanceof DocumentTimeline) && target instanceof HTMLElement) targets.add(target)
+        }
+        for (const node of targets) node.style.animationName = 'none'
+        void el.offsetWidth
+        for (const node of targets) node.style.animationName = ''
+      }, 150)
+    }
+
     render()
     window.addEventListener('scroll', schedule, { passive: true })
     window.addEventListener('resize', reset)
+    if (native) window.addEventListener('resize', refresh)
     reduce.addEventListener('change', reset)
     narrow.addEventListener('change', reset)
     return () => {
       cancelAnimationFrame(frame)
+      clearTimeout(settle)
       window.removeEventListener('scroll', schedule)
       window.removeEventListener('resize', reset)
+      window.removeEventListener('resize', refresh)
       reduce.removeEventListener('change', reset)
       narrow.removeEventListener('change', reset)
     }
