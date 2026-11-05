@@ -163,7 +163,6 @@ h1 .h1-dim { display: block; color: var(--dim); }
 }
 .proof-bar ul { display: contents; list-style: none; }
 .proof-bar li { color: var(--ink); font-weight: 500; }
-.proof-bar li small { font-weight: 400; color: var(--muted); font-size: 13px; }
 
 /* INTRO — pinned hero. The motion runs as native scroll-driven animations
    (keyframes below); IntroScene writes the same transforms inline only where
@@ -454,21 +453,19 @@ h1 .h1-dim { display: block; color: var(--dim); }
 /* The intro's disc is a window into the RBC case. The case is pulled up under
    the intro so its stage is already pinned when the dive starts; it sits on
    top, clipped to the growing disc, and its content zooms in like a camera
-   settling on the scene. `--lead` is the dive (58% of the intro's 160vh pinned
-   range); ScrollScene starts the case's own progress after it. Only where the
-   scene is pinned and the browser runs the intro natively. */
+   settling on the scene. `--lead` is the dive; ScrollScene starts the case's
+   own progress after it. Only where the browser runs the intro natively, and
+   not on 641–900px, where the intro is pinned but the case is not. */
 @property --lead {
   syntax: '<length>';
   inherits: true;
   initial-value: 0px;
 }
 @supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) and (min-width: 901px) {
+  @media (prefers-reduced-motion: no-preference) and (min-width: 901px),
+         (prefers-reduced-motion: no-preference) and (max-width: 640px) {
     .scene-rbc {
-      --lead: 92.8vh;
       position: relative; z-index: 3;
-      height: calc(280vh + var(--lead));
-      margin-top: calc(-100vh - var(--lead));
       pointer-events: none;
       view-timeline: --rbc block;
     }
@@ -487,6 +484,24 @@ h1 .h1-dim { display: block; color: var(--dim); }
     }
     .intro-reveal { display: none; }
   }
+  /* Desktop: the dive is 58% of the intro's 160vh pinned range */
+  @media (prefers-reduced-motion: no-preference) and (min-width: 901px) {
+    .scene-rbc {
+      --lead: 92.8vh;
+      height: calc(280vh + var(--lead));
+      margin-top: calc(-100vh - var(--lead));
+    }
+  }
+  /* Phone: the dive is the track's whole pinned screen. The case is not
+     pinned here and runs taller than the screen, so only its first screen is
+     held, by a spacer as long as the dive, then it scrolls on as before. The
+     disc and the zoom are centred on the screen, not on the taller stage. */
+  @media (prefers-reduced-motion: no-preference) and (max-width: 640px) {
+    .scene-rbc { --lead: 100lvh; margin-top: -200lvh; }
+    .scene-rbc::after { content: ''; display: block; height: var(--lead); }
+    .scene-rbc .scene-stage { position: sticky; top: 0; animation-name: scene-iris-m; }
+    .scene-rbc .scene-grid { transform-origin: 50% 50lvh; }
+  }
 }
 /* Same curve as the intro's disc; 72vmax reaches the corners of any landscape screen */
 @keyframes scene-iris {
@@ -495,6 +510,16 @@ h1 .h1-dim { display: block; color: var(--dim); }
   50% { clip-path: circle(18vmax at 50% 50%); }
   75% { clip-path: circle(40.5vmax at 50% 50%); }
   100% { clip-path: circle(72vmax at 50% 50%); }
+}
+/* The phone's disc (intro-reveal-m), centred on the held screen. At the end
+   the clip goes: the rest of the case, below the screen, must not be cut off. */
+@keyframes scene-iris-m {
+  0% { clip-path: circle(0 at 50% 50lvh); }
+  25% { clip-path: circle(3.9vmax at 50% 50lvh); }
+  50% { clip-path: circle(15.5vmax at 50% 50lvh); }
+  75% { clip-path: circle(34.9vmax at 50% 50lvh); }
+  99.9% { clip-path: circle(62vmax at 50% 50lvh); }
+  100% { clip-path: none; }
 }
 @keyframes scene-focus {
   from { transform: scale(1.2); }

@@ -103,7 +103,7 @@ export default function Home() {
               <ul>
                 <li>RBC Capital Markets</li>
                 <li>CI Financial</li>
-                <li>Deloitte <small>via Trinetix</small></li>
+                <li>Deloitte</li>
                 <li>Sophia Genetics</li>
                 <li>EPAM</li>
               </ul>

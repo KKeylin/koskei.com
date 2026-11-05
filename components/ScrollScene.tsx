@@ -46,12 +46,15 @@ export default function ScrollScene({ id, className, children }: Props) {
       frame = 0
       const rect = el.getBoundingClientRect()
       const vh = window.innerHeight
-      const range = rect.height - vh - lead
+      // The content proper starts after the lead
+      const top = rect.top + lead
+      const height = rect.height - lead
+      const range = height - vh
       let p = 1
       if (!reduce.matches) {
         p = range > 50
-          ? clamp01((-rect.top - lead) / range)
-          : clamp01((vh * 0.85 - rect.top) / (rect.height * 0.8))
+          ? clamp01(-top / range)
+          : clamp01((vh * 0.85 - top) / (height * 0.8))
       }
       const value = p.toFixed(3)
       if (value === last) return
