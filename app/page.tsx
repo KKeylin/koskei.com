@@ -2,10 +2,13 @@ import Image from 'next/image'
 import Dial, { DialOrbit } from '@/components/Dial'
 import Dissolve from '@/components/Dissolve'
 import FadeIn from '@/components/FadeIn'
+import Finale from '@/components/Finale'
+import GlyphField from '@/components/GlyphField'
 import IntroScene from '@/components/IntroScene'
 import LetterTorus from '@/components/LetterTorus'
 import ScrollScene from '@/components/ScrollScene'
 import Testimonials from '@/components/Testimonials'
+import { TECH_ICONS } from '@/components/tech-icons'
 
 function yearsLabel(startYear: number, startMonth: number, startDay: number): string {
   const now = new Date()
@@ -20,6 +23,37 @@ function yearsLabel(startYear: number, startMonth: number, startDay: number): st
 // the moments the 08 → 02 counter (ease-out over 0.1–0.7) passes 7, 6 … 3.
 // Rounds 1–2 survive and light up at the end.
 const ROUND_MARKS = [0.7, 0.7, 0.44, 0.32, 0.25, 0.2, 0.16, 0.12]
+
+// Skills by depth, shown as badges (with a logo where TECH_ICONS has one).
+// The same names fill the faint text behind the section.
+type Skill = { name: string; note?: string }
+const SKILLS: { group: string; items: Skill[] }[] = [
+  {
+    group: 'Strong',
+    items: [
+      { name: 'JavaScript' }, { name: 'TypeScript' }, { name: 'React' }, { name: 'HTML' }, { name: 'CSS' }, { name: 'SCSS' },
+      { name: 'Redux', note: 'Thunk / Saga' }, { name: 'MUI' }, { name: 'AG-Grid' }, { name: 'Module Federation' },
+      { name: 'Feature-Sliced Design' }, { name: 'Config-driven architecture' }, { name: 'Jest' }, { name: 'React Testing Library' },
+      { name: 'Accessibility', note: 'WCAG 2.1' },
+    ],
+  },
+  {
+    group: 'Working',
+    items: [
+      { name: 'Next.js' }, { name: 'Tailwind' }, { name: 'Storybook' }, { name: 'GraphQL' }, { name: 'Radix UI' },
+      { name: 'Playwright' }, { name: 'Zod' }, { name: 'Turborepo' }, { name: 'Webpack' }, { name: 'GitHub Actions' },
+    ],
+  },
+  {
+    group: 'Familiar',
+    items: [{ name: 'Node.js', note: 'tooling, npm authoring' }, { name: 'Angular', note: 'earlier, not current' }, { name: 'SwiftUI' }],
+  },
+  {
+    group: 'Soft',
+    items: [{ name: 'Technical writing' }, { name: 'Code review' }, { name: 'Mentoring' }, { name: 'English', note: 'C1' }],
+  },
+]
+const SKILL_TEXT = `${SKILLS.flatMap(({ items }) => items.map(({ name }) => name)).join(' · ').toUpperCase()} · `
 
 const IconExternalLink = () => (
   <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -54,12 +88,6 @@ const IconMedium = () => (
 const IconLocation = () => (
   <svg viewBox="0 0 24 24" fill="currentColor">
     <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-  </svg>
-)
-
-const IconGlobe = () => (
-  <svg viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
   </svg>
 )
 
@@ -450,42 +478,10 @@ export default function Home() {
         </FadeIn>
       </section>
 
-      {/* SKILLS */}
-      <section id="skills">
-        <div className="section-label">04 — Skills</div>
-        <h2>What I <strong>work with</strong></h2>
-        <div className="skills-grid">
-          <div className="skill-group">
-            <div className="skill-group-title">Strong</div>
-            <div className="skill-items">
-              <span className="skill-item">JavaScript</span><span className="skill-item">TypeScript</span><span className="skill-item">React</span><span className="skill-item">HTML / CSS / SCSS</span><span className="skill-item">Redux (Thunk / Saga)</span><span className="skill-item">MUI</span><span className="skill-item">AG-Grid</span><span className="skill-item">Module Federation</span><span className="skill-item">Feature-Sliced Design</span><span className="skill-item">Config-driven architecture</span><span className="skill-item">Jest</span><span className="skill-item">React Testing Library</span><span className="skill-item">Accessibility (WCAG 2.1)</span>
-            </div>
-          </div>
-          <div className="skill-group">
-            <div className="skill-group-title">Working</div>
-            <div className="skill-items">
-              <span className="skill-item">Next.js</span><span className="skill-item">Tailwind</span><span className="skill-item">Storybook</span><span className="skill-item">GraphQL</span><span className="skill-item">Radix UI</span><span className="skill-item">Playwright</span><span className="skill-item">Zod</span><span className="skill-item">Turborepo</span><span className="skill-item">Webpack</span><span className="skill-item">GitHub Actions</span>
-            </div>
-          </div>
-          <div className="skill-group">
-            <div className="skill-group-title">Familiar</div>
-            <div className="skill-items">
-              <span className="skill-item">Node.js (tooling, npm authoring)</span><span className="skill-item">Angular (earlier, not current)</span><span className="skill-item">SwiftUI</span>
-            </div>
-          </div>
-          <div className="skill-group">
-            <div className="skill-group-title">Soft</div>
-            <div className="skill-items">
-              <span className="skill-item">Technical writing</span><span className="skill-item">Code review</span><span className="skill-item">Mentoring</span><span className="skill-item">English (C1)</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* TESTIMONIALS */}
       <section id="testimonials">
         <span id="cdt-note" className="cdt-anchor" aria-hidden="true" />
-        <div className="section-label">05 — Testimonials</div>
+        <div className="section-label">04 — Testimonials</div>
         <h2>What people <strong>say</strong></h2>
         <FadeIn>
           <Testimonials />
@@ -499,9 +495,60 @@ export default function Home() {
         </div>
       </section>
 
+      <Dissolve to="dark" />
+
+      {/* SKILLS — dark, rows of badges over a field of faint text that ripples on click */}
+      <section id="skills" className="dark skills">
+        <GlyphField text={SKILL_TEXT} />
+        <div className="dark-inner">
+          <div className="skills-head">
+            <div className="section-label">05 — Skills</div>
+            <h2>What I <strong>work with</strong></h2>
+            <p className="skills-hint" aria-hidden="true"><span className="on-pointer">Click anywhere</span><span className="on-touch">Tap anywhere</span></p>
+          </div>
+          <div className="skill-rows">
+            {SKILLS.map(({ group, items }, i) => (
+              <div key={group} className="skill-row">
+                <h3 className="skill-head">
+                  <span className="skill-num" aria-hidden="true">{String(i + 1).padStart(3, '0')} /</span>
+                  <span className="skill-name">{group}</span>
+                  <span className="skill-count" aria-hidden="true">{items.length}</span>
+                </h3>
+                <ul className="skill-items">
+                  {items.map(({ name, note }) => {
+                    const icon = TECH_ICONS[name]
+                    return (
+                      <li key={name} className="skill-badge" style={icon?.tint ? { '--tint': icon.tint } as React.CSSProperties : undefined}>
+                        {icon && <svg viewBox="0 0 24 24" aria-hidden="true"><path d={icon.path} /></svg>}
+                        {name}
+                        {note && <small>{note}</small>}
+                      </li>
+                    )
+                  })}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CONTACT — the closing disc in a field of text rings */}
+      <Finale orbit={<DialOrbit />}>
+        <div className="section-label">06 — Contact</div>
+        <h2>Let&apos;s <strong>talk</strong></h2>
+        <p className="finale-text">
+          I&apos;m open to the right opportunity in fintech or enterprise front-end.
+          <span className="finale-more"> If you&apos;re building something interesting and need someone who thinks about architecture as hard as they think about code — reach out.</span>
+        </p>
+        <a href="mailto:keilinkostiantyn@gmail.com" className="contact-email">keilinkostiantyn@gmail.com</a>
+        <div className="contact-row"><IconLocation />Toronto, Ontario · Canada</div>
+      </Finale>
+
+      <Dissolve to="light" />
+
       {/* LINKS */}
       <section id="links">
-        <div className="section-label">06 — Links</div>
+        <div className="section-label">07 — Links</div>
         <h2>Find me <strong>online</strong></h2>
         <FadeIn className="links-grid">
           <a href="https://github.com/KKeylin" target="_blank" rel="noopener noreferrer" className="link-card">
@@ -520,22 +567,6 @@ export default function Home() {
             <div className="link-icon"><IconNpm /></div>
             <div><span className="link-name">NPM</span><span className="link-handle">Published packages</span></div>
           </a>
-        </FadeIn>
-      </section>
-
-      {/* CONTACT */}
-      <section id="contact">
-        <div className="section-label">07 — Contact</div>
-        <h2>Let&apos;s <strong>talk</strong></h2>
-        <FadeIn className="contact-inner">
-          <div className="contact-text">
-            <p>I&apos;m open to the right opportunity in fintech or enterprise front-end. If you&apos;re building something interesting and need someone who thinks about architecture as hard as they think about code — reach out.</p>
-            <a href="mailto:keilinkostiantyn@gmail.com" className="contact-email">keilinkostiantyn@gmail.com</a>
-          </div>
-          <div className="contact-info">
-            <div className="contact-row"><IconLocation />Toronto, Ontario · Canada</div>
-            <div className="contact-row"><IconGlobe />koskei.com</div>
-          </div>
         </FadeIn>
       </section>
       </main>
