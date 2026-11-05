@@ -546,7 +546,8 @@ h1 .h1-dim { display: block; color: var(--dim); }
 .receipt-line {
   display: flex; align-items: baseline; gap: 0.6rem;
   margin: 0 -0.6rem; padding: 0.45rem 0.6rem;
-  opacity: 0.28;
+  /* Lines still to come stay readable: 0.6 keeps the ink at 4.5:1 on the paper */
+  opacity: 0.6;
   transition: opacity 0.3s, background-color 0.2s, color 0.2s;
 }
 .receipt-line i { flex: 1; border-bottom: 1px dotted currentColor; opacity: 0.5; }
@@ -568,7 +569,7 @@ h1 .h1-dim { display: block; color: var(--dim); }
   border-top: 1px dashed rgba(18,18,18,0.28);
   font-size: 13px;
   font-weight: 700;
-  opacity: 0.28;
+  opacity: 0.6;
   transition: opacity 0.3s;
 }
 .receipt-total[data-on] { opacity: 1; }

@@ -12,6 +12,10 @@ type Props = {
 const C = 500
 // Longest side of the backing store: the canvas is a few times the dial's size
 const MAX_SIDE = 2560
+// Glyphs drawn per frame. All of them in one frame is one long raster task
+// (seconds on a phone without a GPU canvas); spread over frames, the field
+// fades in once it is complete
+const BATCH = 30
 
 /**
  * Text rings outside the dial's bezel, drawn once on a canvas that spins as a
@@ -28,6 +32,7 @@ export default function DialField({ rings, dur, reverse }: Props) {
     const canvas = ref.current
     if (!canvas) return
     let side = 0
+    let raf = 0
     let cancelled = false
     let observer: ResizeObserver | undefined
 
@@ -37,6 +42,8 @@ export default function DialField({ rings, dur, reverse }: Props) {
       const px = Math.round(css * dpr)
       if (!px || px === side) return
       side = px
+      cancelAnimationFrame(raf)
+      canvas.removeAttribute('data-ready')
       canvas.width = px
       canvas.height = px
       const ctx = canvas.getContext('2d')
@@ -44,32 +51,45 @@ export default function DialField({ rings, dur, reverse }: Props) {
 
       const k = px / (2 * R)
       const { color, fontFamily } = getComputedStyle(canvas)
-      ctx.translate(px / 2, px / 2)
       ctx.fillStyle = color
       ctx.strokeStyle = color
       ctx.textAlign = 'center'
       ctx.lineWidth = k
       ctx.setLineDash([k, 6 * k])
 
-      for (const { r, size, line } of rings) {
-        ctx.globalAlpha = 0.35
-        ctx.beginPath()
-        ctx.arc(0, 0, (r - size * 0.55) * k, 0, 2 * Math.PI)
-        ctx.stroke()
-
-        // Monospace glyphs spread evenly round the circle, upright outwards,
-        // clockwise from the top: what textPath with textLength does
-        ctx.globalAlpha = 0.85
-        ctx.font = `${size * k}px ${fontFamily}`
-        const step = (2 * Math.PI) / line.length
-        for (let i = 0; i < line.length; i++) {
-          ctx.setTransform(1, 0, 0, 1, px / 2, px / 2)
-          ctx.rotate((i + 0.5) * step)
-          ctx.fillText(line[i], 0, -r * k)
+      let ring = 0
+      let i = 0
+      const batch = () => {
+        raf = 0
+        let budget = BATCH
+        while (ring < rings.length && budget > 0) {
+          const { r, size, line } = rings[ring]
+          if (i === 0) {
+            ctx.setTransform(1, 0, 0, 1, px / 2, px / 2)
+            ctx.globalAlpha = 0.35
+            ctx.beginPath()
+            ctx.arc(0, 0, (r - size * 0.55) * k, 0, 2 * Math.PI)
+            ctx.stroke()
+          }
+          // Monospace glyphs spread evenly round the circle, upright outwards,
+          // clockwise from the top: what textPath with textLength does
+          ctx.globalAlpha = 0.85
+          ctx.font = `${size * k}px ${fontFamily}`
+          const step = (2 * Math.PI) / line.length
+          for (; i < line.length && budget > 0; i++, budget--) {
+            ctx.setTransform(1, 0, 0, 1, px / 2, px / 2)
+            ctx.rotate((i + 0.5) * step)
+            ctx.fillText(line[i], 0, -r * k)
+          }
+          if (i === line.length) {
+            ring++
+            i = 0
+          }
         }
-        ctx.setTransform(1, 0, 0, 1, px / 2, px / 2)
+        if (ring < rings.length) raf = requestAnimationFrame(batch)
+        else canvas.setAttribute('data-ready', '')
       }
-      canvas.setAttribute('data-ready', '')
+      batch()
     }
 
     document.fonts.load(`16px ${getComputedStyle(canvas).fontFamily}`).finally(() => {
@@ -80,6 +100,7 @@ export default function DialField({ rings, dur, reverse }: Props) {
     })
     return () => {
       cancelled = true
+      cancelAnimationFrame(raf)
       observer?.disconnect()
     }
   }, [rings, R])

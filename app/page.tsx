@@ -290,7 +290,7 @@ export default function Home() {
             <p>I write about engineering trade-offs on <strong>Medium</strong> and <strong>LinkedIn</strong> — mostly about the stuff that doesn&apos;t fit in tutorials.</p>
           </div>
           <div className="about-meta">
-            <Image src="/photo.jpg" alt="Kostiantyn Keilin" width={400} height={400} className="avatar" priority />
+            <Image src="/photo.jpg" alt="Kostiantyn Keilin" width={400} height={400} sizes="(max-width: 640px) 100vw, 470px" className="avatar" priority />
             <div className="meta-row">
               <span className="meta-key">Currently</span>
               <span className="meta-val">Senior Front-End Engineer · CI Financial</span>
@@ -371,8 +371,8 @@ export default function Home() {
               </div>
             </div>
             <div className="proj-links">
-              <a href="https://cdt.koskei.com/" target="_blank" rel="noopener noreferrer" className="proj-link"><IconExternalLink />Demo</a>
-              <a href="https://github.com/KKeylin/config-driven-recommendations" target="_blank" rel="noopener noreferrer" className="proj-link"><IconGitHub />GitHub</a>
+              <a href="https://cdt.koskei.com/" target="_blank" rel="noopener noreferrer" className="proj-link"><IconExternalLink />Demo<span className="sr-only"> of config-driven-testimonials</span></a>
+              <a href="https://github.com/KKeylin/config-driven-recommendations" target="_blank" rel="noopener noreferrer" className="proj-link"><IconGitHub />GitHub<span className="sr-only"> repository of config-driven-testimonials</span></a>
               <a href="https://www.npmjs.com/package/config-driven-testimonials" target="_blank" rel="noopener noreferrer" className="proj-link"><IconNpm />NPM</a>
               <a href="#cdt-note" className="proj-link proj-link-internal">↓ Live on this page</a>
             </div>
@@ -388,8 +388,8 @@ export default function Home() {
               </div>
             </div>
             <div className="proj-links">
-              <a href="https://playshelf-eight.vercel.app/" target="_blank" rel="noopener noreferrer" className="proj-link"><IconExternalLink />Demo</a>
-              <a href="https://github.com/KKeylin/playshelf" target="_blank" rel="noopener noreferrer" className="proj-link"><IconGitHub />GitHub</a>
+              <a href="https://playshelf-eight.vercel.app/" target="_blank" rel="noopener noreferrer" className="proj-link"><IconExternalLink />Demo<span className="sr-only"> of Playshelf</span></a>
+              <a href="https://github.com/KKeylin/playshelf" target="_blank" rel="noopener noreferrer" className="proj-link"><IconGitHub />GitHub<span className="sr-only"> repository of Playshelf</span></a>
               <a href="https://playshelf-storybook.vercel.app/" target="_blank" rel="noopener noreferrer" className="proj-link"><IconExternalLink />Storybook</a>
             </div>
           </FadeIn>
