@@ -538,7 +538,7 @@ export default function Home() {
       </section>
 
       {/* CONTACT — the closing disc in a field of text rings */}
-      <Finale orbit={<DialOrbit />}>
+      <Finale orbit={<DialOrbit lazy />}>
         <div className="section-label">06 — Contact</div>
         <h2>Let&apos;s <strong>talk</strong></h2>
         <p className="finale-text">

@@ -6,6 +6,8 @@ type Props = {
   rings: { r: number; size: number; line: string }[]
   dur: number
   reverse?: boolean
+  /** Draw only when the canvas comes near the viewport (for dials far down the page) */
+  lazy?: boolean
 }
 
 // Dial units: the dial is a 1000 × 1000 box centred on (500, 500)
@@ -24,7 +26,7 @@ const BATCH = 30
  * hairlines match the SVG rings (`.dial-text`, `.dial-hairline`). Redrawn only
  * when the dial changes size.
  */
-export default function DialField({ rings, dur, reverse }: Props) {
+export default function DialField({ rings, dur, reverse, lazy }: Props) {
   const ref = useRef<HTMLCanvasElement>(null)
   const R = Math.max(...rings.map(ring => ring.r + ring.size))
 
@@ -92,18 +94,31 @@ export default function DialField({ rings, dur, reverse }: Props) {
       batch()
     }
 
-    document.fonts.load(`16px ${getComputedStyle(canvas).fontFamily}`).finally(() => {
-      if (cancelled) return
+    const start = () => {
       draw()
       observer = new ResizeObserver(draw)
       observer.observe(canvas)
+    }
+    // Lazy: drawn the first time the reader gets within three screens. Drawing
+    // takes ~1.6 s on a slow phone, so a closer start shows the fade-in late
+    let near: IntersectionObserver | undefined
+    document.fonts.load(`16px ${getComputedStyle(canvas).fontFamily}`).finally(() => {
+      if (cancelled) return
+      if (!lazy) return start()
+      near = new IntersectionObserver(([entry]) => {
+        if (!entry.isIntersecting) return
+        near?.disconnect()
+        start()
+      }, { rootMargin: '300% 0px' })
+      near.observe(canvas)
     })
     return () => {
       cancelled = true
       cancelAnimationFrame(raf)
       observer?.disconnect()
+      near?.disconnect()
     }
-  }, [rings, R])
+  }, [rings, R, lazy])
 
   const box = { left: `${(C - R) / 10}%`, top: `${(C - R) / 10}%`, width: `${R / 5}%`, height: `${R / 5}%` }
   return (

@@ -1004,7 +1004,7 @@ h2 strong { font-weight: 500; color: var(--dim); }
   font-size: 11px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #6f6f69;
+  color: var(--dim); /* 5.1:1 on the dark ground */
 }
 .on-touch { display: none; }
 @media (hover: none) {
@@ -1037,7 +1037,7 @@ h2 strong { font-weight: 500; color: var(--dim); }
   text-transform: uppercase;
   color: var(--bg);
 }
-.skill-num, .skill-count { color: #6f6f69; }
+.skill-num, .skill-count { color: var(--dim); }
 .skill-count { margin-left: auto; }
 /* Badges are solid on the dark ground, so the ripple runs around them, not through */
 .skill-items { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; }

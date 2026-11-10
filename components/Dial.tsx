@@ -108,11 +108,11 @@ export default function Dial() {
   )
 }
 
-export function DialOrbit() {
+export function DialOrbit({ lazy }: { lazy?: boolean }) {
   return (
     <div className="dial">
-      <DialField rings={fieldRings(false)} dur={260} />
-      <DialField rings={fieldRings(true)} dur={300} reverse />
+      <DialField rings={fieldRings(false)} dur={260} lazy={lazy} />
+      <DialField rings={fieldRings(true)} dur={300} reverse lazy={lazy} />
     </div>
   )
 }

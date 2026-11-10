@@ -181,12 +181,18 @@ export default function GlyphField({ text }: Props) {
       }, 120)
     })
 
-    const family = getComputedStyle(canvas).fontFamily
-    document.fonts.load(`12px ${family}`).finally(() => {
-      if (cancelled) return
+    // Laid out the first time the reader gets within a screen and a half
+    const near = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return
+      near.disconnect()
       ready = true
       layout()
       io.observe(host)
+    }, { rootMargin: '150% 0px' })
+    const family = getComputedStyle(canvas).fontFamily
+    document.fonts.load(`12px ${family}`).finally(() => {
+      if (cancelled) return
+      near.observe(host)
     })
     ro.observe(host)
     host.addEventListener('click', onClick)
@@ -195,6 +201,7 @@ export default function GlyphField({ text }: Props) {
       cancelled = true
       clearTimeout(settle)
       cancelAnimationFrame(raf)
+      near.disconnect()
       io.disconnect()
       ro.disconnect()
       host.removeEventListener('click', onClick)
