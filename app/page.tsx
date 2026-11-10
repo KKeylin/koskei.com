@@ -5,6 +5,7 @@ import FadeIn from '@/components/FadeIn'
 import Finale from '@/components/Finale'
 import GlyphField from '@/components/GlyphField'
 import IntroScene from '@/components/IntroScene'
+import KeyGlide from '@/components/KeyGlide'
 import LetterTorus from '@/components/LetterTorus'
 import ScrollScene from '@/components/ScrollScene'
 import Testimonials from '@/components/Testimonials'
@@ -579,6 +580,7 @@ export default function Home() {
         <span className="footer-copy">© 2026 Kostiantyn Keilin</span>
         <span className="footer-built">koskei.com</span>
       </footer>
+      <KeyGlide />
     </>
   )
 }
